@@ -3,17 +3,19 @@
 #include <cmath>
 #include <random>
 
-#define nElems(x) (sizeof(x) / sizeof(x[0]))
+void printArray_(double a[], int len) {
+    int i;
+    for (i = 0; i < len; i++) std::cout << a[i] << ' ';
+}
 
-
-void computeMasses(double masses[], double oscMass, double  omega[], double omegaMin, double gamma, int N){
+void computeMasses(double masses[], double oscMass, double  omega[], double omegaMin,const double GAMMA, const int N){
 //  int n = nElems(masses);
   for (int i = 0; i < N ; i++) {
-    masses[i]=oscMass*pow((omega[i]/omegaMin),(gamma-3))*exp(-omega[i]);
+    masses[i]=oscMass*pow((omega[i]/omegaMin),(GAMMA-3))*exp(-omega[i]);
   }
 }
 
-void computeSpringConstants(double k[] ,double masses[], double omega[], int N) {
+void computeSpringConstants(double k[] ,double masses[], double omega[],const int N) {
   //int n = nElems(k);
   k[0]=0.0;
   for (int i = 1; i < N+1; i++) {
@@ -21,7 +23,7 @@ void computeSpringConstants(double k[] ,double masses[], double omega[], int N) 
   }
 }
 
-double H(double q[] , double p[], double k[], double invM[], int N) { // compute total energy of the system
+double H(double q[] , double p[], double k[], double invM[], const int N) { // compute total energy of the system
   double E = p[0] * p[0] * invM[0];
   for (int i = 1; i < N+1 ; ++i) {
     E += p[i] * p[i] * invM[i] + k[i] * pow(q[i] - q[0], 2);
@@ -35,9 +37,10 @@ double totalMomentum(double p[], int N) {
     for (int i = 1; i < N+1 ; ++i) {
         mom += p[i];
     }
+    return mom;
 }
 
-void computeOmega(double omega[], double omegaMin, double omegaMax, int N) {
+void setEigenfrequencies(double omega[], double omegaMin, double omegaMax, const int N) {
     double c;
     c = (omegaMax - omegaMin)/(N - 1);
     for(int i = 0; i < N - 1; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
@@ -45,79 +48,78 @@ void computeOmega(double omega[], double omegaMin, double omegaMax, int N) {
     omega[N - 1] = omegaMax;
 }
 
-void invertMasses(double invM[], double M, double masses[], int N) {
+void invertMasses(double invM[], double M, double masses[], const int N) {
     invM[0]=1/M;
     for (int i = 0; i < N ; ++i) {
        invM[i+1] = 1/masses[i];
     }
 }
 
-void generateInitialConditions(double q0[], double p0[], double M, double masses[],double k[], double beta ,int N) {
+void generateInitialConditions(double q0[], double p0[], double M, double masses[], double k[],const double BETA ,const int N) {
 
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<> d{0,1};
-    double pref=pow(beta,-0.5);
+    double pref=pow(BETA,-0.5);
 
     //set the initial conditions for the distinguished particle
-    q0[0]=0;
-    p0[0]=pref*pow(M,0.5)*d(gen);
+    q0[0] = 0;
+    p0[0] = pref * pow(M,0.5) * d(gen);
 
-    for (int i = 1; i < N+1; ++i) {
+    for (int i = 1; i < N + 1; ++i) {
        q0[i+1] = q0[0] + pref*pow(k[i],-0.5)*d(gen);
        p0[i+1] = pref*pow(masses[i-1],0.5)* d(gen);
     }
+    //initialize heatbath with vanishing center of mass velocity
+    double avgMomentum;
+    for (int i = 0; i < N + 2; ++i) {
+        avgMomentum += p0[i];
+    }
+    avgMomentum /= N+1;
+
+    double sum = totalMomentum(p0,N+1);
+    printf("total momentum: %E \n", sum);
+
+    for (int i = 0; i < N + 1; ++i) {
+        p0[i]-=avgMomentum;
+    }
+    sum = totalMomentum(p0,N+1);
+    printf("totalMomentum: %E \n", sum);
 }
 
-void updateMomenta(double p1[], double q0[], double p0[], double k[], double dt, int N) {
+void updateMomenta(double p1[], double q0[], double p0[], double k[],const double DT,const int N) {
     double s;
     p1[0] = p0[0];
     for (int i = 1; i < N+1; ++i) {
-        s = k[i] * (q0[0]-q0[i])*dt;
+        s = k[i] * (q0[0]-q0[i])*DT;
         p1[0] -= s;
         p1[i] = s + p0[i];
     }
 }// have to be of same length
 
-void updatePositions(double q1[], double p1[], double q0[], double invM[], double dt, int N) {
+void updatePositions(double q1[], double p1[], double q0[], double invM[], const double DT, const int N) {
     for (int i = 0; i < N+1 ; ++i) {
-       q1[i] = q0[i] + p1[i]*invM[i]*dt;
+       q1[i] = q0[i] + p1[i]*invM[i]*DT;
     }
 }
 
-
-
-void makeTimestep(double q1[], double p1[], double q0[],double p0[], double k[], double invM[], double dt, int N) {
-    updateMomenta(p1,q0,p0,k,dt,N); //update momenta first for a symplectic Euler algorithm
-    updatePositions()
+void makeTimestep(double q1[], double p1[], double q0[],double p0[], double k[], double invM[],const double DT,const int N) {
+    updateMomenta(p1,q0,p0,k,DT,N); //update momenta first for a symplectic Euler algorithm
+    updatePositions(q1,p1,q0,invM,DT,N);
 }
 
-void solveEOM(double q1[], double p1[], double q0[], double p0[], double invM[], double k[], double tspan[], double dt, int N) {
-    int nTimesteps = ceil((tspan[1]-tspan[0])/dt);
+void solveEOM(double q1[], double p1[], double q0[], double p0[], double invM[], double k[], const double TSPAN[], const double DT, const int N) {
+    int nTimesteps = ceil((TSPAN[1]-TSPAN[0])/DT);
+    double initialEnergy;
     for (int i = 0; i < nTimesteps ; ++i) {
-        makeTimestep(q1,p1,q0,p0,k,invM,dt,N);
-        q0=q1;
+        makeTimestep(q1,p1,q0,p0,k,invM,DT,N);
+        q0=q1; //updated coordinates replace old ones for next timestep
         p0=p1;
     }
 
 }
 
 //////////////////////////////////////////////////////////
-
-
-
-
-
-void printArray_(double a[], int len) {
-  int i;
-    for (i = 0; i < len; i++) std::cout << a[i] << ' ';
-}
-
-
-
-
-
-
 
 
 #endif
