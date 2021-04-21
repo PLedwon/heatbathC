@@ -1,3 +1,3 @@
 all:
-	gcc -o heatbath heatbath.c++ -lm -ld
+	g++ -o heatbath heatbath.cpp -lm
 	./heatbath
