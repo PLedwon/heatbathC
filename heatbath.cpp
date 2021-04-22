@@ -4,7 +4,7 @@
 #include "functions.h"
 int main() {
 
-const int N = 100; //# of harmonic oscillators in our heatbath
+const int N = 3; //# of harmonic oscillators in our heatbath
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const double TSPAN[2] = {0, pow(10,1)};

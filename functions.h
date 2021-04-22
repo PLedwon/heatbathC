@@ -8,6 +8,15 @@ void printArray_(double a[], int len) {
     for (i = 0; i < len; i++) std::cout << a[i] << ' ';
 }
 
+double avg(double a[], int N) {
+    double avg=0;
+    for (int i = 0; i < N + 1; ++i) {
+       avg+=a[i];
+    }
+    avg /= N+1;
+    return avg;
+}
+
 void computeMasses(double masses[], double oscMass, double  omega[], double omegaMin,const double GAMMA, const int N){
 //  int n = nElems(masses);
   for (int i = 0; i < N ; i++) {
@@ -32,10 +41,10 @@ double H(double q[] , double p[], double k[], double invM[], const int N) { // c
   return  E;
 }
 
-double totalMomentum(double p[], int N) {
+double sum(double p[], int N) {
     double mom = 0;
-    for (int i = 1; i < N+1 ; ++i) {
-        mom += p[i];
+    for (int i = 0; i < N+1 ; ++i) {
+        mom = mom  + p[i];
     }
     return mom;
 }
@@ -71,20 +80,17 @@ void generateInitialConditions(double q0[], double p0[], double M, double masses
        p0[i+1] = pref*pow(masses[i-1],0.5)* d(gen);
     }
     //initialize heatbath with vanishing center of mass velocity
-    double avgMomentum;
-    for (int i = 0; i < N + 2; ++i) {
-        avgMomentum += p0[i];
-    }
-    avgMomentum /= N+1;
-
-    double sum = totalMomentum(p0,N+1);
-    printf("total momentum: %E \n", sum);
-
+    double avgMomentum = avg(p0,N);
+    double p0sum = sum(p0,N+1);
+    printf("total momentum: %E \n", p0sum);
+    printArray_(p0,N);
     for (int i = 0; i < N + 1; ++i) {
-        p0[i]-=avgMomentum;
+        p0[i] = p0[i] - avgMomentum;
     }
-    sum = totalMomentum(p0,N+1);
-    printf("totalMomentum: %E \n", sum);
+    p0sum = sum(p0,N+1);
+    printf("avg momentum: %E \n", avg(p0,N));
+    printf("total momentum: %E \n", p0sum);
+    printArray_(p0,N);
 }
 
 void updateMomenta(double p1[], double q0[], double p0[], double k[],const double DT,const int N) {
