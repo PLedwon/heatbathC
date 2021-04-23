@@ -2,20 +2,25 @@
 #define functions
 #include <cmath>
 #include <random>
+#include <array>
 
 void printArray_(double a[], int len) {
     int i;
     for (i = 0; i < len; i++) std::cout << a[i] << ' ';
+    printf("\n")
 }
 
 double avg(double a[], int N) {
     double avg=0;
     for (int i = 0; i < N + 1; ++i) {
-       avg+=a[i];
+       avg+=a[i]/ (double) (N+1) ;
     }
-    avg /= N+1;
+//avg /= (double) N+1;
     return avg;
 }
+
+
+
 
 void computeMasses(double masses[], double oscMass, double  omega[], double omegaMin,const double GAMMA, const int N){
 //  int n = nElems(masses);
@@ -49,12 +54,13 @@ double sum(double p[], int N) {
     return mom;
 }
 
-void setEigenfrequencies(double omega[], double omegaMin, double omegaMax, const int N) {
+void setEigenfrequencies(double omega[], double omegaMin, double omegaMax, const int NTOTAL) {
     double c;
-    c = (omegaMax - omegaMin)/(N - 1);
-    for(int i = 0; i < N - 1; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
+    c = (omegaMax - omegaMin)/(NTOTAL-1);
+    for(int i = 0; i < NTOTAL - 1; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
         omega[i] = omegaMin + i*c;
-    omega[N - 1] = omegaMax;
+    omega[NTOTAL] = omegaMax;
+    printArray_(omega);
 }
 
 void invertMasses(double invM[], double M, double masses[], const int N) {
@@ -76,21 +82,21 @@ void generateInitialConditions(double q0[], double p0[], double M, double masses
     p0[0] = pref * pow(M,0.5) * d(gen);
 
     for (int i = 1; i < N + 1; ++i) {
-       q0[i+1] = q0[0] + pref*pow(k[i],-0.5)*d(gen);
-       p0[i+1] = pref*pow(masses[i-1],0.5)* d(gen);
+       q0[i] = q0[0] + pref*pow(k[i],-0.5)*d(gen);
+       p0[i] = pref*pow(masses[i-1],0.5)* d(gen);
     }
     //initialize heatbath with vanishing center of mass velocity
     double avgMomentum = avg(p0,N);
-    double p0sum = sum(p0,N+1);
+    double p0sum = sum(p0,N);
     printf("total momentum: %E \n", p0sum);
     printArray_(p0,N);
     for (int i = 0; i < N + 1; ++i) {
         p0[i] = p0[i] - avgMomentum;
     }
     p0sum = sum(p0,N+1);
-    printf("avg momentum: %E \n", avg(p0,N));
-    printf("total momentum: %E \n", p0sum);
-    printArray_(p0,N);
+   // printf("avg momentum: %E \n", avg(p0,N));
+   // printf("total momentum: %E \n", p0sum);
+    //printArray_(p0,N);
 }
 
 void updateMomenta(double p1[], double q0[], double p0[], double k[],const double DT,const int N) {
