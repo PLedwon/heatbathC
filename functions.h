@@ -13,7 +13,8 @@ struct heatbath
 
 void printVector_(vector<double> a) {
     int i;
-    for (i = 0; i < a.size(); i++) std::cout << a[i] << ' ';
+    //for (i = 0; i < a.size(); i++) std::cout << a[i] << ' ';
+    for (i = 0; i < a.size(); i++) printf("%e ", a[i]);
     printf("\n");
 }
 
@@ -66,7 +67,7 @@ vector<double> setEigenfrequencies(double omegaMin, double omegaMax, int N) {
     return omega;
 }
 
-vector<double> invertMasses(double M, vector<double> masses) {
+vector<double> invertMasses(vector<double> masses) {
     vector<double> invM(masses.size(),0);
     for (int i = 0; i < invM.size() ; ++i) {
        invM[i] = 1/masses[i];
@@ -74,12 +75,16 @@ vector<double> invertMasses(double M, vector<double> masses) {
     return invM;
 }
 
-heatbath generateInitialConditions(vector<double> q0, vector<double> p0, double M, vector<double> masses, vector<double> k,const double BETA) {
+heatbath generateInitialConditions(double M, vector<double> masses, vector<double> k,const double BETA) {
 
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<> d{0,1};
     double pref=pow(BETA,-0.5);
+
+    vector<double> q0(k.size(),0);
+    vector<double> p0(k.size(),0);
+
 
     //set the initial conditions for the distinguished particle
     q0[0] = 0;
@@ -109,15 +114,17 @@ heatbath generateInitialConditions(vector<double> q0, vector<double> p0, double 
 
 void updateMomenta(heatbath bath, vector<double> k,const double DT,const int N) {
     double s;
-    //p1[0] = p0[0];
     for (int i = 1; i < N+1; ++i) {
         s = k[i] * (bath.q[0]-bath.q[i])*DT;
+        //printf("s=%e \n", s);
         bath.p[0] -= s;
+       // printf("updated P = %e \n", bath.p[0]);
         bath.p[i] += s;
     }
 }// have to be of same length
 
-void updatePositions(heatbath bath, vector<double> invM, const double DT, const int N) {
+void updatePositions(heatbath bath, const vector<double> invM, const double DT, const int N) {
+    printVector_(invM);
     for (int i = 0; i < N+1 ; ++i) {
        bath.q[i] += bath.p[i]*invM[i]*DT;
     }
@@ -133,7 +140,6 @@ void solveEOM(heatbath bath, vector<double> invM, vector<double> k, const double
     double initialEnergy;
     for (int i = 0; i < nTimesteps ; ++i) {
         makeTimestep(bath,k,invM,DT,N);
-        printVector_(bath.q);
 
     }
 
