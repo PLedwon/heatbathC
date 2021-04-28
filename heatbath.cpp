@@ -7,11 +7,11 @@ using std::vector;
 
 int main() {
 
-const int N = 1000; //# of harmonic oscillators in our heatbath
+const int N = 10; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
-const double TSPAN[2] = {0, pow(10,1)};
+const double TSPAN[2] = {0, pow(10,2)};
 const double DT = pow(10,-4);
 double oscMass = 1.0; //mass of heaviest bath oscillator
 double M = 1.0; // mass of distinguished particle
@@ -29,12 +29,18 @@ const vector<double> masses = computeMasses(oscMass,M,omega,omegaMin,GAMMA);
 const vector<double> k = computeSpringConstants(masses, omega);
 const vector<double> invM = invertMasses(M, masses);
 // set initial conditions and solve the eom
-generateInitialConditions(q0,p0,M,masses,k,BETA);
 
-printf("Energy before solving heatbath: %E", H(q0,p0,k,invM));
-solveEOM(q1,p1,q0,p0,invM,k,TSPAN,DT,N);
-printf("Energy after solving heatbath: %E", H(q1,p1,k,invM));
-printf("momentum after solving heatbath: %E", std::accumulate(p1.begin(),p1.end(),0)) ;
+struct heatbath bath;
+try {
+bath = generateInitialConditions(q0, p0, M, masses, k, BETA);
+} catch (const char* msg) {
+    std::cerr << msg << std::endl;
+}
+
+printf("Energy before solving heatbath: %E \n", H(bath.q,bath.p,k,invM));
+solveEOM(bath,invM,k,TSPAN,DT,N);
+printf("Energy after solving heatbath: %E \n", H(bath.q,bath.p,k,invM));
+printf("momentum after solving heatbath: %E \n", sum(bath.p)) ;
 
 // solve EOM and save Q at times tsave
 //save Q to file
