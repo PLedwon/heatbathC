@@ -39,6 +39,6 @@ solveEOM(bath,invM,k,TSPAN,DT,N);
 printf("absolute momentum error: %e \n", momentumError(bath));
 printf("rel. energy error = %e \n", energyError(bath,k,invM));
 
-write_csv("trajectory.csv","trajectory", bath.trajectory);
+write_csv("./data/trajectory.csv","trajectory", bath.trajectory);
 
 }

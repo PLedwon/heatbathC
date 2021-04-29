@@ -13,6 +13,25 @@ struct heatbath
     vector<double> trajectory = {0}; // position of distinguished particle in time
     double initialEnergy;
     double initialMomentum;
+
+};
+
+class Heatbath {        // The class
+public:          // Access specifier
+    double initialEnergy;
+    double initialMomentum;
+    const static int bathsize;
+    static double q[bathsize];
+    static double p[bathsize];
+    static double invM[bathsize] ;  // Attribute
+    static double k[bathsize] ;  // Attribute
+    Heatbath(double invM[], double k[], double initialEnergy, double initialMomentum, int NTOTAL) {
+        invM = invM;
+        k = k;
+        initialEnergy = initialEnergy;
+        initialMomentum = initialMomentum;
+        bathsize = NTOTAL;
+    }
 };
 
 void printVector_(vector<double> a) {
