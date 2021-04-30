@@ -7,3 +7,6 @@ profile:
 	./bin/heatbath
 	gprof heatbath
 
+plot:
+	g++ -Ofast ./src/heatbath.cpp -o ./bin/heatbath -lm
+	./bin/heatbath
