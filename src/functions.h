@@ -16,28 +16,27 @@ struct heatbath
 
 };
 
-//class Heatbath {        // The class
-//public:          // Access specifier
-//    double initialEnergy;
-//    double initialMomentum;
-//    static int bathsize;
-//    static double q[bathsize];
-//    static double p[bathsize];
-//    static double invM[bathsize] ;  // Attribute
-//    static double k[bathsize] ;  // Attribute
-//    Heatbath(double invM[], double k[], double initialEnergy, double initialMomentum, int NTOTAL) {
-//        invM = invM;
-//        k = k;
-//        initialEnergy = initialEnergy;
-//        initialMomentum = initialMomentum;
-//        bathsize = NTOTAL;
-//    }
-//};
+class Heatbath {        // The class
+public:          // Access specifier
+    double initialEnergy;
+    double initialMomentum;
+    static constexpr int bathsize = 10000 + 1 ;
+    static double q[];
+    static double p[];
+    static double invM[] ;  // Attribute
+    static double k[] ;  // Attribute
+    Heatbath(double invM[], double k[], double initialEnergy, double initialMomentum) {
+        invM = invM;
+        k = k;
+        initialEnergy = initialEnergy;
+        initialMomentum = initialMomentum;
+    }
+};
 
-void printVector_(vector<double> a) {
+void printArray_(double a[], int n) {
     int i;
     //for (i = 0; i < a.size(); i++) std::cout << a[i] << ' ';
-    for (i = 0; i < a.size(); i++) printf("%e ", a[i]);
+    for (i = 0; i < n; i++) printf("%e ", a[i]);
     printf("\n");
 }
 
@@ -46,13 +45,11 @@ double avg(vector<double> a) {
     return (double) average/a.size();
 }
 
-vector<double> computeMasses(double oscMass,double M, const vector<double> omega, double omegaMin,const double GAMMA){
-  vector<double> masses(omega.size()+1,0);
-  masses.front()=M;
-  for (int i = 1; i < masses.size() ; i++) {
+void computeMasses(double (&masses)[], double oscMass, double M, double omega[], double omegaMin, const double GAMMA, int NTOTAL){
+  masses[0]=M;
+  for (int i = 1; i < NTOTAL ; i++) {
     masses[i]=oscMass*pow((omega[i-1]/omegaMin),(GAMMA-3))*exp(-omega[i-1]);
   }
-  return masses;
 
 }
 
@@ -80,14 +77,12 @@ double sum(vector<double> p) {
     return mom;
 }
 
-vector<double> setEigenfrequencies(double omegaMin, double omegaMax, int N) {
+void setEigenfrequencies(double (&omega)[], double omegaMin, double omegaMax, int N) {
     double c;
-    vector<double> omega(N,0);
-    c = (omegaMax - omegaMin)/(omega.size()-1);
-    for(int i = 0; i < omega.size() - 1; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
+    c = (omegaMax - omegaMin)/(N-1);
+    for(int i = 0; i < N ; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
         omega[i] = omegaMin + i*c;
-    omega.back() = omegaMax;
-    return omega;
+    //omega.back() = omegaMax;
 }
 
 vector<double> invertMasses(vector<double> masses) {
