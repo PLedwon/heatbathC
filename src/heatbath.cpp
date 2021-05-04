@@ -4,10 +4,8 @@
 #include <vector>
 #include "functions.h"
 
-using std::vector;
-
 const int N = 10000; //# of harmonic oscillators in our heatbath
-const int Heatbath::bathsize; //= N + 1; // adding the distinguished particle
+//const int Heatbath::size = N + 1; // adding the distinguished particle
 
 int main() {
 
@@ -24,32 +22,30 @@ double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and l
 // setting the bathparameters
 double omega[N];
 double masses[NTOTAL];
+double k[NTOTAL];
+double invM[NTOTAL];
 setEigenfrequencies(omega,omegaMin,omegaMax,N);
 computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA,NTOTAL);
-//const vector<double> k = computeSpringConstants(masses, omega);
-//const vector<double> invM = invertMasses(masses);
-//struct heatbath bath;
-//
-//Heatbath Bath(invM, k, 0.0, 0.0);
-//
-//
-//
-//
-//// set initial conditions and solve the eom
-//
-//
-//try {
-//bath = generateInitialConditions(M, masses, k, BETA);
-//} catch (const char* msg) {
-//    std::cerr << msg << std::endl;
-//}
-//double initialEnergy = 0;
-//double initialMomentum = 0;
-//
-////Heatbath Bath;
-////Bath.invM = invM;
-////(invM, k, initialEnergy, initialMomentum);
-//
+computeSpringConstants(k, masses, omega, NTOTAL);
+invertMasses(invM,masses, NTOTAL);
+
+// set initial conditions and solve the eom
+
+double q0[NTOTAL];
+double p0[NTOTAL];
+
+
+try {
+generateInitialConditions(q0, p0, M, masses, k, BETA, NTOTAL);
+} catch (const char* msg) {
+    std::cerr << msg << std::endl;
+}
+double initialEnergy = 0;
+double initialMomentum = 0;
+Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
+printf("%e", bath.initialEnergy);
+printArray_(bath.p,NTOTAL);
+
 //solveEOM(bath,invM,k,TSPAN,DT,N);
 //printf("absolute momentum error: %e \n", momentumError(bath));
 //printf("rel. energy error = %e \n", energyError(bath,k,invM));
