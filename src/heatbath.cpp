@@ -42,9 +42,9 @@ generateInitialConditions(q0, p0, M, masses, k, BETA, NTOTAL);
 }
 double initialEnergy = 0;
 double initialMomentum = 0;
-Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
-printf("%e", bath.initialEnergy);
-printArray_(bath.p,NTOTAL);
+//Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
+//printf("%e", bath.initialEnergy);
+//printArray_(bath.p,NTOTAL);
 
 //solveEOM(bath,invM,k,TSPAN,DT,N);
 //printf("absolute momentum error: %e \n", momentumError(bath));

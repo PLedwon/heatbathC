@@ -1,8 +1,4 @@
 all:
-	g++ ./src/heatbath.cpp -o ./bin/heatbath.o -lm
-	./bin/heatbath.o
-
-test:
 	g++ -Ofast ./src/heatbath.cpp -o ./bin/heatbath.o -lm
 	./bin/heatbath.o
 

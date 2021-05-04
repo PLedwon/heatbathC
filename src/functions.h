@@ -22,10 +22,10 @@ class Heatbath {
 public:
     double initialEnergy;
     double initialMomentum;
-    static double invM[];
-    static double k[];
-    static double q[];
-    static double p[];
+    static double invM[10001];
+    static double k[10001];
+    static double q[10001];
+    static double p[10001];
     static int size;
     Heatbath(double invM[], double k[], double q[],  double p[], double initialEnergy, double initialMomentum, int size) {
         invM = invM;
