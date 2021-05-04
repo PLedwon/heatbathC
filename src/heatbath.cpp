@@ -5,11 +5,34 @@
 #include "functions.h"
 
 const int N = 10000; //# of harmonic oscillators in our heatbath
+const int NTOTAL = N + 1; // adding the distinguished particle
 //const int Heatbath::size = N + 1; // adding the distinguished particle
+
+
+////////// make it a struct
+class Heatbath {
+public:
+    double initialEnergy;
+    double initialMomentum;
+    static double invM[NTOTAL];
+    static double k[NTOTAL];
+    static double q[NTOTAL];
+    static double p[NTOTAL];
+    static int size;
+    Heatbath(double invM[NTOTAL], double k[NTOTAL], double q[NTOTAL],  double p[NTOTAL], double initialEnergy, double initialMomentum, int size) {
+        invM = invM;
+        k = k;
+        q = q;
+        p = p;
+        initialEnergy = initialEnergy;
+        initialMomentum = initialMomentum;
+        size = size;
+    }
+};
+
 
 int main() {
 
-const int NTOTAL = N + 1; // adding the distinguished particle
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const double TSPAN[2] = {0, pow(10,2)};
@@ -17,7 +40,6 @@ const double DT = pow(10,-4);
 double oscMass = pow(10,1); //mass of heaviest bath oscillator
 double M = pow(10,-3); // mass of distinguished particle
 double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
-
 
 // setting the bathparameters
 double omega[N];
@@ -42,9 +64,9 @@ generateInitialConditions(q0, p0, M, masses, k, BETA, NTOTAL);
 }
 double initialEnergy = 0;
 double initialMomentum = 0;
-//Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
-//printf("%e", bath.initialEnergy);
-//printArray_(bath.p,NTOTAL);
+Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
+printf("%e", bath.initialEnergy);
+printArray_(bath.p,NTOTAL);
 
 //solveEOM(bath,invM,k,TSPAN,DT,N);
 //printf("absolute momentum error: %e \n", momentumError(bath));

@@ -18,25 +18,25 @@ struct heatbath
 };
 */
 
-class Heatbath {
-public:
-    double initialEnergy;
-    double initialMomentum;
-    static double invM[10001];
-    static double k[10001];
-    static double q[10001];
-    static double p[10001];
-    static int size;
-    Heatbath(double invM[], double k[], double q[],  double p[], double initialEnergy, double initialMomentum, int size) {
-        invM = invM;
-        k = k;
-        q = q;
-        p = p;
-        initialEnergy = initialEnergy;
-        initialMomentum = initialMomentum;
-        size = size;
-    }
-};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void printArray_(double a[], int n) {
     int i;
