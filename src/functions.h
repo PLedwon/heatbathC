@@ -2,41 +2,19 @@
 #define functions
 #include <cmath>
 #include <random>
-#include <vector>
 #include <fstream>
-using std::vector;
 
-/*
+
 struct heatbath
 {
-    vector<double> q; // store phasespace coordinates of recent timestep
-    vector<double> p;
-    vector<double> trajectory = {0}; // position of distinguished particle in time
+    static double q[]; // store phasespace coordinates of recent timestep
+    static double p[];
+    static double invM[];
+    static double k[];
+    static double trajectory; // position of distinguished particle in time
     double initialEnergy;
     double initialMomentum;
-
 };
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void printArray_(double a[], int n) {
     int i;
@@ -86,7 +64,8 @@ double sum(double p[], int n) {
     return mom;
 }
 
-void setEigenfrequencies(double (&omega)[], double omegaMin, double omegaMax, int N) {
+template<typename T, size_t n>
+void setEigenfrequencies(T (&omega)[n], double omegaMin, double omegaMax, int N) {
     double c;
     c = (omegaMax - omegaMin)/(N-1);
     for(int i = 0; i < N ; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators

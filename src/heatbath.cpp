@@ -46,6 +46,8 @@ double omega[N];
 double masses[NTOTAL];
 double k[NTOTAL];
 double invM[NTOTAL];
+
+
 setEigenfrequencies(omega,omegaMin,omegaMax,N);
 computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA,NTOTAL);
 computeSpringConstants(k, masses, omega, NTOTAL);
