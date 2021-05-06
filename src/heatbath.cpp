@@ -1,62 +1,66 @@
-//#include <cstdio>
 #include <iostream>
 #include <cmath>
-#include <vector>
+#include <array>
 #include "functions.h"
-
-const int N = 10000; //# of harmonic oscillators in our heatbath
-const int NTOTAL = N + 1; // adding the distinguished particle
+using std::array;
 //const int Heatbath::size = N + 1; // adding the distinguished particle
 
-
-////////// make it a struct
-class Heatbath {
-public:
-    double initialEnergy;
-    double initialMomentum;
-    static double invM[NTOTAL];
-    static double k[NTOTAL];
-    static double q[NTOTAL];
-    static double p[NTOTAL];
-    static int size;
-    Heatbath(double invM[NTOTAL], double k[NTOTAL], double q[NTOTAL],  double p[NTOTAL], double initialEnergy, double initialMomentum, int size) {
-        invM = invM;
-        k = k;
-        q = q;
-        p = p;
-        initialEnergy = initialEnergy;
-        initialMomentum = initialMomentum;
-        size = size;
-    }
-};
-
-
-int main() {
-
+const int N = 10; //# of harmonic oscillators in our heatbath
+const int NTOTAL = N + 1; // adding the distinguished particle
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const double TSPAN[2] = {0, pow(10,2)};
 const double DT = pow(10,-4);
+const int NTIMESTEPS = (TSPAN[1]-TSPAN[0])/DT;
+
+struct heatbath
+{
+//    static array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
+    array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
+    array<double, NTOTAL> p; // store phasespace coordinates of recent timestep
+    array<double, NTOTAL> invM;
+    array<double, NTOTAL> k;
+    array<double, NTIMESTEPS> trajectory; // save distinguished particle trajectory
+    double initialEnergy;
+    double initialMomentum;
+    heatbath(array<double, NTOTAL> q, array<double, NTOTAL> p, array<double, NTOTAL> invM, array<double, NTOTAL> k,  array<double, NTIMESTEPS> trajectory, double initialEnergy, double initialMomentum) {
+        q = q;
+        p = p;
+        invM = invM;
+        k = k;
+        trajectory = trajectory;
+        initialEnergy = initialEnergy;
+        initialMomentum = initialMomentum;
+
+    }
+};
+
+int main() {
+
 double oscMass = pow(10,1); //mass of heaviest bath oscillator
 double M = pow(10,-3); // mass of distinguished particle
 double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
-
 // setting the bathparameters
-double omega[N];
-double masses[NTOTAL];
-double k[NTOTAL];
-double invM[NTOTAL];
+array<double, N> omega;
+static array<double, NTOTAL> masses;
+static array<double, NTOTAL> k;
+static array<double, NTOTAL> invM;
+static array<double, NTOTAL> q;
+static array<double, NTOTAL> p;
+static array <double, NTIMESTEPS> trajectory;
+double initialEnergy = 0;
+double initialMomentum = 0;
 
-
-setEigenfrequencies(omega,omegaMin,omegaMax,N);
-computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA,NTOTAL);
-computeSpringConstants(k, masses, omega, NTOTAL);
-invertMasses(invM,masses, NTOTAL);
-
+setEigenfrequencies(omega,omegaMin,omegaMax);
+computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
+computeSpringConstants(k, masses, omega);
+    printArray_(k);
+invertMasses(invM,masses);
+    printf("%e ",invM[0]);
 // set initial conditions and solve the eom
-
-double q0[NTOTAL];
-double p0[NTOTAL];
+heatbath bath(q, p, invM, k, trajectory, initialEnergy, initialMomentum);
+printArray_(bath.k);
+/*
 
 
 try {
@@ -69,7 +73,7 @@ double initialMomentum = 0;
 Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
 printf("%e", bath.initialEnergy);
 printArray_(bath.p,NTOTAL);
-
+*/
 //solveEOM(bath,invM,k,TSPAN,DT,N);
 //printf("absolute momentum error: %e \n", momentumError(bath));
 //printf("rel. energy error = %e \n", energyError(bath,k,invM));

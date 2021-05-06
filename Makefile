@@ -1,5 +1,5 @@
 all:
-	g++ -Ofast ./src/heatbath.cpp -o ./bin/heatbath -lm
+	g++ -Ofast  -o ./bin/heatbath ./src/heatbath.cpp -lm
 	./bin/heatbath
 
 profile:
