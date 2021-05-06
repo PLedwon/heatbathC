@@ -11,11 +11,14 @@ const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const double TSPAN[2] = {0, pow(10,2)};
 const double DT = pow(10,-4);
-const int NTIMESTEPS = (TSPAN[1]-TSPAN[0])/DT;
+const int NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
+
+
 
 struct heatbath
 {
 //    static array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
+
     array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
     array<double, NTOTAL> p; // store phasespace coordinates of recent timestep
     array<double, NTOTAL> invM;
@@ -31,9 +34,9 @@ struct heatbath
         trajectory = trajectory;
         initialEnergy = initialEnergy;
         initialMomentum = initialMomentum;
-
     }
 };
+
 
 int main() {
 
@@ -41,7 +44,7 @@ double oscMass = pow(10,1); //mass of heaviest bath oscillator
 double M = pow(10,-3); // mass of distinguished particle
 double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
 // setting the bathparameters
-array<double, N> omega;
+static array<double, N> omega;
 static array<double, NTOTAL> masses;
 static array<double, NTOTAL> k;
 static array<double, NTOTAL> invM;
@@ -54,22 +57,19 @@ double initialMomentum = 0;
 setEigenfrequencies(omega,omegaMin,omegaMax);
 computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
 computeSpringConstants(k, masses, omega);
-    printArray_(k);
 invertMasses(invM,masses);
-    printf("%e ",invM[0]);
-// set initial conditions and solve the eom
-heatbath bath(q, p, invM, k, trajectory, initialEnergy, initialMomentum);
-printArray_(bath.k);
-/*
 
 
 try {
-generateInitialConditions(q0, p0, M, masses, k, BETA, NTOTAL);
+generateInitialConditions(q, p, M, masses, k, BETA);
 } catch (const char* msg) {
     std::cerr << msg << std::endl;
 }
-double initialEnergy = 0;
-double initialMomentum = 0;
+
+heatbath bath(q, p, invM, k, trajectory, initialEnergy, initialMomentum);
+    /*
+
+
 Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
 printf("%e", bath.initialEnergy);
 printArray_(bath.p,NTOTAL);
