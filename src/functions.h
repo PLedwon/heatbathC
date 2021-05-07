@@ -8,31 +8,6 @@
 using std::array;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 template<typename T,size_t n>
 void printArray_(array<T,n> a) {
     int i;
@@ -68,17 +43,18 @@ void computeSpringConstants(array<double,n> (&k), array<double,n> masses, array<
     k[i]=masses[i]*pow(omega[i-1],2);
   }
 }
-/*
-double H(heatbath bath, const array<double> k, const array<double> invM) { // compute total energy of the system
-  double E = bath.p[0] * bath.p[0] * invM[0];
-  for (int i = 1; i < bath.q.size() ; ++i) {
-    E += bath.p[i] * bath.p[i] * invM[i] + k[i] * pow(bath.q[i] - bath.q[0], 2);
+
+template<size_t n>
+double H(array<double,n> &q,  array<double,n> &p, const array<double,n> &invM, const array<double,n> &k) { // compute total energy of the system
+  double E = p[0] * p[0] * invM[0];
+  for (int i = 1; i < q.size() ; ++i) {
+    E += p[i] * p[i] * invM[i] + k[i] * pow(q[i] - q[0], 2);
     //printf("accumulated energy %e \n", E);
     }
   E *= 0.5;
   return  E;
 }
-*/
+
 template<size_t n>
 double sum(array <double,n> p) {
     double mom = 0;
@@ -122,7 +98,7 @@ void generateInitialConditions(array<double,n> &q,  array<double,n> &p, double M
     }
     //initialize heatbath with vanishing center of mass velocity
     double avgMomentum = avg(p);
-    double psum = sum(p);
+    double psum;
     for (int i = 0; i < p.size(); ++i) {
         p[i] -= avgMomentum;
     }
@@ -137,52 +113,53 @@ void generateInitialConditions(array<double,n> &q,  array<double,n> &p, double M
 
 
 template< size_t n>
-void updateMomenta(heatbath &bath, array<double,n> k, const double DT) {
+void updateMomenta( array<double, n> &q, array<double, n> &p, const array<double,n> &k, const double DT) {
     double s = 0;
     for (int i = 1; i < k.size(); ++i) {
-        s = k[i] * (bath.q[0]-bath.q[i])*DT;
+        s = k[i] * (q[0]-q[i])*DT;
         //printf("s=%e \n", s);
-        bath.p[0] -= s;
+        p[0] -= s;
        // printf("updated P = %e \n", bath.p[0]);
-        bath.p[i] += s;
+        p[i] += s;
     }
 }// have to be of same length
 
 template<size_t n>
-void updatePositions(heatbath &bath, array<double,n> invM, const double DT) {
+void updatePositions(array<double, n> &q, array<double, n> &p, const array<double,n> &invM, const double DT) {
     for (int i = 0; i < invM.size() ; ++i) {
-       bath.q[i] += bath.p[i]*invM[i]*DT;
+       q[i] += p[i]*invM[i]*DT;
     }
 }
 
 template<size_t n>
-void makeTimestep(heatbath &bath, array<double,n> k, array<double,n> invM, const double DT) {
-    updateMomenta(bath,k,DT,n); //update momenta first for a symplectic Euler algorithm
-    updatePositions(bath,invM,DT,n);
+void makeTimestep(array<double, n> &q, array<double, n> &p, const array<double,n> &invM, const array<double,n> &k, const double DT) {
+    updateMomenta(q,p,k,DT); //update momenta first for a symplectic Euler algorithm
+    updatePositions(q,p,invM,DT);
 
 }
 
 template<size_t n>
-void solveEOM(heatbath &bath, array<double,n> invM, array<double,n> k, const double TSPAN[], const double DT ) {
-    int nTimesteps = ceil((TSPAN[1]-TSPAN[0])/DT);
-    double initialEnergy = H(bath,k,invM);
-    bath.initialEnergy = initialEnergy;
-    for (int i = 0; i < nTimesteps ; ++i) {
-        makeTimestep(bath,k,invM,DT);
+void solveEOM(array<double, n> &q, array<double, n> &p,const array<double,n> &invM,const array<double,n> &k, const double DT, const int NTIMESTEPS ) {
+    double initialEnergy = H(q,p,invM,k);
+    initialEnergy = initialEnergy;
+    for (int i = 0; i < NTIMESTEPS ; ++i) {
+        makeTimestep(q,p,invM,k,DT);
       //  bath.trajectory.push_back(bath.q[0]); //  save most recent position
 
     }
 
 }
 
-double energyError(heatbath &bath, array<double> k, array<double> invM){
- return (H(bath,k,invM)-bath.initialEnergy)/bath.initialEnergy;
+template<size_t n>
+double energyError(array<double, n> &q, array<double, n> &p, const array<double,n> &invM, const array<double,n> &k, const double initialEnergy){
+ return (H(q,p,invM,k)-initialEnergy)/initialEnergy;
 }
 
-double momentumError(heatbath &bath) {
-    return bath.initialMomentum-sum(Bath.p,Bath.size);
+template<size_t n>
+double momentumError(array<double, n> &p, const double initialMomentum) {
+    return std::abs(initialMomentum-sum(p));
 }
-
+/*
 //////////////////////////////////////////////////////////
 void write_csv(std::string filename, std::string colname, std::array<double> vals){
     std::ofstream myFile(filename);
@@ -197,5 +174,5 @@ void write_csv(std::string filename, std::string colname, std::array<double> val
     myFile.close();
 }
 
-
+*/
 #endif
