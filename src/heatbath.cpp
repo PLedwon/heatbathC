@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <array>
+#include <random>
 #include "functions.h"
 using std::array;
 //const int Heatbath::size = N + 1; // adding the distinguished particle
@@ -86,7 +87,9 @@ printf("rel. energy error = %e \n", energyError(q,p,invM,k,initialEnergy));
 //
 
 
-int name = rand() % (int) pow(10,6); // generate random name for output file
+std::random_device rd;
+std::uniform_int_distribution<int> dist(0, 999999);
+int name = dist(rd);
 
 write_csv("./data/trajectory" + std::to_string(name) + ".csv","trajectory" , trajectory);
 
