@@ -5,7 +5,7 @@ all:
 profile:
 	g++ -Ofast ./src/heatbath.cpp -o ./bin/heatbath -lm -pg
 	./bin/heatbath
-	gprof heatbath
+	gprof ./bin/heatbath
 
 plot:
 	g++ -Ofast ./src/heatbath.cpp -o ./bin/heatbath -lm

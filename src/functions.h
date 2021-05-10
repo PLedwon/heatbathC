@@ -138,16 +138,19 @@ void makeTimestep(array<double, n> &q, array<double, n> &p, const array<double,n
 
 }
 
-template<size_t n>
-void solveEOM(array<double, n> &q, array<double, n> &p,const array<double,n> &invM,const array<double,n> &k, const double DT, const int NTIMESTEPS ) {
-    double initialEnergy = H(q,p,invM,k);
-    initialEnergy = initialEnergy;
+template<size_t n, size_t m>
+void solveEOM(array<double, n> &q, array<double, n> &p,const array<double,n> &invM, const array<double,n> &k, array<double,m> &trajectory, const double DT, const int NTIMESTEPS ) {
+    //double initialEnergy = H(q,p,invM,k);
+    //initialEnergy = initialEnergy;
+    int saveIndex = ceil(NTIMESTEPS/trajectory.size());
+    int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
-        makeTimestep(q,p,invM,k,DT);
-      //  bath.trajectory.push_back(bath.q[0]); //  save most recent position
-
+        makeTimestep(q, p, invM, k, DT);
+        if (i % saveIndex == 0) {
+            trajectory[j] = q[0]; //  save most recent position of distinguished particle
+            j++;
+        }
     }
-
 }
 
 template<size_t n>
@@ -159,9 +162,10 @@ template<size_t n>
 double momentumError(array<double, n> &p, const double initialMomentum) {
     return std::abs(initialMomentum-sum(p));
 }
-/*
-//////////////////////////////////////////////////////////
-void write_csv(std::string filename, std::string colname, std::array<double> vals){
+
+////////////////////////////////////////////////////////////
+template<size_t n>
+void write_csv(std::string filename, std::string colname, std::array<double,n> vals){
     std::ofstream myFile(filename);
     myFile << colname << "\n";
 
@@ -174,5 +178,5 @@ void write_csv(std::string filename, std::string colname, std::array<double> val
     myFile.close();
 }
 
-*/
+
 #endif
