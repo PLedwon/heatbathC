@@ -2,53 +2,27 @@
 #include <cmath>
 #include <array>
 #include <random>
+#include <ctime>
+#include <fstream>
 #include "functions.h"
 using std::array;
-//const int Heatbath::size = N + 1; // adding the distinguished particle
 
-/*
-struct heatbath
-{
-//    static array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
-
-    static array<double, NTOTAL> q; // store phasespace coordinates of recent timestep
-    static array<double, NTOTAL> p; // store phasespace coordinates of recent timestep
-    static array<double, NTOTAL> invM;
-    static array<double, NTOTAL> k;
-    static array<double, NTIMESTEPS> trajectory; // save distinguished particle trajectory
-    double initialEnergy;
-    double initialMomentum;
-    heatbath(array<double, NTOTAL> q, array<double, NTOTAL> p, array<double, NTOTAL> invM, array<double, NTOTAL> k,  array<double, NTIMESTEPS> trajectory, double initialEnergy, double initialMomentum);
-};
-
-heatbath::heatbath(array<double, NTOTAL> q, array<double, NTOTAL> p, array<double, NTOTAL> invM,
-                   array<double, NTOTAL> k, array<double, NTIMESTEPS> trajectory, double initialEnergy,
-                   double initialMomentum) {
-    q = q;
-    p = p;
-    invM = invM;
-    k = k;
-    printArray_(k);
-    trajectory = trajectory;
-    initialEnergy = initialEnergy;
-    initialMomentum = initialMomentum;
-}
-*/
 
 int main() {
 
-const int N = 100; //# of harmonic oscillators in our heatbath
+const int N = 20000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, pow(10,3)};
-const double DT = pow(10,-5);
+const double TSPAN[2] = {0, pow(10,-1)};
+const double DT = pow(10,-6);
 const int NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const int NSAVE = (int) fmin(pow(10,6),NTIMESTEPS); // max outfile size capped at about 10 MB
 
-double oscMass = pow(10,3); //mass of heaviest bath oscillator
-double M = pow(10,-5); // mass of distinguished particle
-double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
+double oscMass = pow(10,2); //mass of heaviest bath oscillator
+double M = pow(10,-3); // mass of distinguished particle
+double omegaMin=pow(N,-0.8323), omegaMax=omegaMin*pow(N,1.05764); //highest and lowest eigenfrequency of the bath
+
 // setting the bathparameters
 static array<double, N> omega;
 static array<double, NTOTAL> masses;
@@ -75,16 +49,18 @@ generateInitialConditions(q, p, M, masses, k, BETA);
 const double initialEnergy = H(q,p,invM,k);
 const double initialMomentum = sum(p);
 
-    /*
-Heatbath bath(invM, k, q0, p0, initialEnergy, initialMomentum, NTOTAL);
-printf("%e", bath.initialEnergy);
-printArray_(bath.p,NTOTAL);
-*/
+time_t begin,end;
+
+time(&begin);
 
 solveEOM(q,p,invM,k,trajectory,DT,NTIMESTEPS);
-printf("absolute momentum error: %e \n", momentumError(p, initialMomentum ));
-printf("rel. energy error = %e \n", energyError(q,p,invM,k,initialEnergy));
-//
+double mError= momentumError(p, initialMomentum );
+double eError= energyError(q,p,invM,k,initialEnergy);
+printf("absolute momentum error: %e \n", mError);
+printf("rel. energy error = %e \n", eError);
+
+time(&end);
+double difference = difftime(end,begin)/3600.0;
 
 
 std::random_device rd;
@@ -93,4 +69,35 @@ int name = dist(rd);
 
 write_csv("./data/trajectory" + std::to_string(name) + ".csv","trajectory" , trajectory);
 
+
+// write to logfile
+
+//std::ofstream outfile ("../data/log" + std::to_string(name) + ".txt");
+std::ofstream outfile ( "./" + std::to_string(name) + ".txt");
+outfile << "rel. E error = " << eError << ", abs. M Error = " << mError << ", runtime = " << difference <<"h" << std::endl;
+outfile.close();
+
+
+
+
+
+
+/*
+std::ofstream ofs;
+ofs.open("./data/log/logfile.txt", std::ofstream::app);
+//ofs << std::to_string(name) << ", " << std::to_string(eError) << ", " << std::to_string(mError) << ", " << std::to_string(difference) << std::endl;
+ofs << "." << std::endl;
+ofs.close();
+
+*/
+
+std::string filename("./data/log/logfile.txt");
+std::fstream file;
+
+file.open(filename, std::ios_base::app | std::ios_base::in);
+if (file.is_open())
+	file << std::to_string(name) << ", " << std::to_string(eError) << ", " << std::to_string(mError) << ", " << std::to_string(difference) << std::endl;
+file.close();
+
+return 0;
 }
