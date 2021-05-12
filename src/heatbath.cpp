@@ -31,6 +31,8 @@ static array<double, NTOTAL> invMTemp;
 static array<double, NTOTAL> q;
 static array<double, NTOTAL> p;
 static array <double, NSAVE> trajectory;
+static array <double, NSAVE> energyErrArray;
+static array <double, NSAVE> momentumErrorArray;
 
 setEigenfrequencies(omega,omegaMin,omegaMax);
 computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
@@ -49,51 +51,26 @@ generateInitialConditions(q, p, M, masses, k, BETA);
 const double initialEnergy = H(q,p,invM,k);
 const double initialMomentum = sum(p);
 
-time_t begin,end;
+time_t begin,end; // save runtime
 
 time(&begin);
 
-solveEOM(q,p,invM,k,trajectory,DT,NTIMESTEPS);
+solveEOM(q,p,invM,k,trajectory,energyErrArray,momentumErrorArray,DT,NTIMESTEPS);
 double mError= momentumError(p, initialMomentum );
 double eError= energyError(q,p,invM,k,initialEnergy);
-printf("absolute momentum error: %e \n", mError);
-printf("rel. energy error = %e \n", eError);
 
 time(&end);
 double difference = difftime(end,begin)/3600.0;
 
 
+//generate a random name for outputfiles, write to logfile
 std::random_device rd;
 std::uniform_int_distribution<int> dist(0, 999999);
 int name = dist(rd);
-
 write_csv("./data/trajectory" + std::to_string(name) + ".csv","trajectory" , trajectory);
-
-
-// write to logfile
-
-//std::ofstream outfile ("../data/log" + std::to_string(name) + ".txt");
-std::ofstream outfile ( "./" + std::to_string(name) + ".txt");
-outfile << "rel. E error = " << eError << ", abs. M Error = " << mError << ", runtime = " << difference <<"h" << std::endl;
-outfile.close();
-
-
-
-
-
-
-/*
-std::ofstream ofs;
-ofs.open("./data/log/logfile.txt", std::ofstream::app);
-//ofs << std::to_string(name) << ", " << std::to_string(eError) << ", " << std::to_string(mError) << ", " << std::to_string(difference) << std::endl;
-ofs << "." << std::endl;
-ofs.close();
-
-*/
 
 std::string filename("./data/log/logfile.txt");
 std::fstream file;
-
 file.open(filename, std::ios_base::app | std::ios_base::in);
 if (file.is_open())
 	file << std::to_string(name) << ", " << std::to_string(eError) << ", " << std::to_string(mError) << ", " << std::to_string(difference) << std::endl;

@@ -105,7 +105,7 @@ void generateInitialConditions(array<double,n> &q,  array<double,n> &p, double M
     psum = sum(p);
 
     //check that total momentum is close to zero
-    if (std::abs(psum) > pow(10,-13)) {
+    if (std::abs(psum) > pow(10,-12)) {
         throw "Error: CoM velocity is not 0 while initializing heatbath";
     }
 }
@@ -139,15 +139,17 @@ void makeTimestep(array<double, n> &q, array<double, n> &p, const array<double,n
 }
 
 template<size_t n, size_t m>
-void solveEOM(array<double, n> &q, array<double, n> &p,const array<double,n> &invM, const array<double,n> &k, array<double,m> &trajectory, const double DT, const int NTIMESTEPS ) {
-    //double initialEnergy = H(q,p,invM,k);
-    //initialEnergy = initialEnergy;
+void solveEOM(array<double, n> &q, array<double, n> &p,const array<double,n> &invM, const array<double,n> &k, array<double,m> &trajectory, array<double,m> &energyErrArray, array<double,m> &momentumErrArray, const double DT, const int NTIMESTEPS ) {
+    double initialEnergy = H(q,p,invM,k);
+    double initialMomentum = sum(p);
     int saveIndex = ceil(NTIMESTEPS/trajectory.size());
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
         makeTimestep(q, p, invM, k, DT);
         if (i % saveIndex == 0) {
             trajectory[j] = q[0]; //  save most recent position of distinguished particle
+            energyErrArray[j] = abs(H(q,p,invM,k)-initialEnergy)/initialEnergy;
+            momentumErrArray[j] = abs(sum(p)-initialMomentum);
             j++;
         }
     }
