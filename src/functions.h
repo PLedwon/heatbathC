@@ -7,6 +7,40 @@
 #include <array>
 using std::array;
 
+template <class T, int n, int m>
+class Heatbath {
+
+    const int size;
+    const static T<double,n> k ;
+    const static T<double,n> invM ;
+    static T q [n];
+    static T p [n];
+    static T trajectory [m];
+    static T energyError [m];
+    static T momentumError [m];
+
+public:
+    Heatbath(int size_, T k_, T invM_)
+    {
+    size = size_;
+    k = k_;
+    invM = invM_;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 template<typename T,size_t n>
 void printArray_(array<T,n> a) {

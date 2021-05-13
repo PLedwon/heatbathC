@@ -42,6 +42,9 @@ invertMasses(invMTemp,masses);
 const static array<double, NTOTAL> k = kTemp;
 const static array<double, NTOTAL> invM = invMTemp;
 
+Heatbath<static array, NTOTAL, NTIMESTEPS >(NTOTAL, k, invM);
+
+
 try {
 generateInitialConditions(q, p, M, masses, k, BETA);
 } catch (const char* msg) {
