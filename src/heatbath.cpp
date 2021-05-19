@@ -9,14 +9,14 @@
 #include "functions.h"
 using std::array;
 
-const int N = 20000; //# of harmonic oscillators in our heatbath
-const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, 2*pow(10,3)};
-const double DT = 5*pow(10,-7);
-const int NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
+constexpr int N = 20000; //# of harmonic oscillators in our heatbath
+constexpr int NTOTAL = N + 1; // adding the distinguished particle
+constexpr double TSPAN[2] = {0, pow(10,-1)};
+constexpr double DT =pow(10,-8);
+const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
-const int NSAVE = (int) fmin(pow(10,6),NTIMESTEPS); // max outfile size capped at about 10 MB
+constexpr int NSAVE = (int)fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
 //initialize static heatbath members
 double Heatbath::k[NTOTAL] = {0};
@@ -28,10 +28,12 @@ double Heatbath::energyErr[NSAVE] = {0};
 double Heatbath::momentumErr[NSAVE] = {0};
 int Heatbath::size = NTOTAL;
 int Heatbath::nSave = NSAVE;
+double Heatbath::initialEnergy;
+double Heatbath::initialMomentum;
 
 
 int main() {
-double oscMass = pow(10,2); //mass of heaviest bath oscillator
+double oscMass = pow(10,1); //mass of heaviest bath oscillator
 double M = pow(10,-3); // mass of distinguished particle
 double omegaMin=pow(N,-0.8323), omegaMax=omegaMin*pow(N,1.05764); //highest and lowest eigenfrequency of the bath
 
@@ -70,6 +72,8 @@ double difference = difftime(end,begin)/3600.0;
 std::random_device rd;
 std::uniform_int_distribution<int> dist(0, 999999);
 int name = dist(rd);
+
+
 write_csv("./data/trajectory" + std::to_string(name) + ".csv","trajectory" , bath);
 
 std::string filename("./data/log/logfile.txt");

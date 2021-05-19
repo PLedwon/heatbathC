@@ -19,6 +19,8 @@ class Heatbath {
     static double trajectory[];
     static double energyErr[];
     static double momentumErr[];
+    static double initialEnergy;
+    static double initialMomentum;
 
 };
 
@@ -114,6 +116,8 @@ void generateInitialConditions(Heatbath &bath, double M,  double masses[], const
     if (std::abs(psum) > pow(10,-12)) {
         throw "Error: CoM velocity is not 0 while initializing heatbath";
     }
+    bath.initialEnergy = H(bath);
+    bath.initialMomentum = sum(bath.p,bath.size);
 }
 
 
@@ -136,22 +140,28 @@ void updatePositions(Heatbath &bath, const double DT) {
 }
 
 void makeTimestep(Heatbath &bath, const double DT) {
-    updateMomenta(bath,DT); //update momenta first for a symplectic Euler algorithm
-    updatePositions(bath,DT);
-
+    updateMomenta(bath, DT); //update momenta first for a symplectic Euler algorithm
+    updatePositions(bath, DT);
 }
 
-void solveEOM(Heatbath &bath, const double DT, const int NTIMESTEPS) {
-    double initialEnergy = H(bath);
-    double initialMomentum = sum(bath.p,bath.size);
+ double energyError(Heatbath &bath){
+  return (H(bath)-bath.initialEnergy)/bath.initialEnergy;
+ }
+
+ double momentumError(Heatbath &bath) {
+     return std::abs(bath.initialMomentum-sum(bath.p,bath.size));
+ }
+
+
+
+void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
     int saveIndex = ceil(NTIMESTEPS/bath.nSave);
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
-        makeTimestep(bath, DT);
         if (i % saveIndex == 0) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
-            bath.energyErr[j] = abs(H(bath)-initialEnergy)/initialEnergy;
-            bath.momentumErr[j] = abs(sum(bath.p,bath.size)-initialMomentum);
+            bath.energyErr[j] = energyError(bath);
+            bath.momentumErr[j] = momentumError(bath);
 
             if (bath.energyErr[j]>pow(10,-4)) {
                 throw "relative energy error > 10^(-4)";
@@ -161,23 +171,14 @@ void solveEOM(Heatbath &bath, const double DT, const int NTIMESTEPS) {
             }
             j++;
         }
+        makeTimestep(bath, DT);
     }
-}
-
-template<size_t n>
-double energyError(array<double, n> &q, array<double, n> &p, const array<double,n> &invM, const array<double,n> &k, const double initialEnergy){
- return (H(q,p,invM,k)-initialEnergy)/initialEnergy;
-}
-
-template<size_t n>
-double momentumError(array<double, n> &p, const double initialMomentum) {
-    return std::abs(initialMomentum-sum(p));
 }
 
 ////////////////////////////////////////////////////////////
 void write_csv(std::string filename, std::string colname, Heatbath &bath){
     std::ofstream myFile(filename);
-    myFile << colname << "\n";
+    //myFile << colname << "\n";
 
     // Send data to the stream
     for(int i = 0; i < bath.size; ++i)

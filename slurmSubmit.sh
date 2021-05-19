@@ -8,5 +8,114 @@
 #SBATCH --output=serial_test_%j.log   # Standard output and error log
 pwd; hostname; date
 
-for i in 'seq 10'; do srun ./bin/heatbath ; done
+#for i in 'seq 50'; do srun --exclude=gdong[1-8],dong44 make ; done
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
+srun --exclude=gdong[1-8],dong44 ./bin/heatbath 
 
