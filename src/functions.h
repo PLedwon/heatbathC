@@ -152,7 +152,15 @@ void makeTimestep(Heatbath &bath, const double DT) {
      return std::abs(bath.initialMomentum-sum(bath.p,bath.size));
  }
 
-
+void write_time(std::string filename) {
+    std::ofstream myFile(filename);
+    //myFile << colname << "\n";
+    for(int i = 0; i < bath.size; ++i)
+    {
+        myFile << "20% done" << "\n";
+    }
+    myFile.close();
+}
 
 void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
     int saveIndex = ceil(NTIMESTEPS/bath.nSave);
@@ -168,6 +176,10 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
             }
             if (bath.momentumErr[j]>pow(10,-9)) {
                 throw "absolute momentum error > 10^(-9)";
+            }
+
+            if (j==ceil(0.2*bath.nSave)) {
+                write_time("./data/log/timelog.txt");
             }
             j++;
         }
@@ -188,6 +200,24 @@ void write_csv(std::string filename, std::string colname, Heatbath &bath){
 
     myFile.close();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif
