@@ -26,22 +26,23 @@ if not glob.glob('./*.npz'):
         df = pd.read_csv(file)
         q = df.to_numpy()
         squaQ = np.power(q,2)
-        print(np.size(squaQ), np.size(squaredQ))
         for i in range(len(squaredQ)):
             squaredQ[i] +=q[i]**2
-        aveQ = aveQ + q
+            aveQ[i] += q[i]
+
 
 
 norm = np.power(len(resultList),-1.0)
-varQ = norm*squaredQ - np.power(norm,2.0)*aveQ
-varQplot = varQ[0:1:np.size(q)-1]
+print(np.size(varQ))
+for i in range(len(varQ)):
+    varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 
 #plt.plot(q)
 #plt.savefig("./img/trajectory.pdf")
 
-
-plt.plot(varQplot)
+print(np.size(varQ))
+plt.plot(varQ)
 plt.savefig("./img/varQ.pdf")
 
 
