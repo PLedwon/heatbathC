@@ -38,10 +38,9 @@ for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 
-#plt.plot(q)
-#plt.savefig("./img/trajectory.pdf")
+plt.plot(q)
+plt.savefig("./img/trajectory.pdf")
 
-print(np.size(varQ))
 plt.plot(varQ)
 plt.savefig("./img/varQ.pdf")
 
