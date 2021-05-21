@@ -35,7 +35,7 @@ if not glob.glob('./*.npz'):
 norm = np.power(len(resultList),-1.0)
 print(np.size(varQ))
 for i in range(len(varQ)):
-    varQ[i] = norm*squaredQ[i] #- norm**2 * aveQ[i]
+    varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 
 #plt.plot(q)
