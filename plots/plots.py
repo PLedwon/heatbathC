@@ -39,8 +39,8 @@ varQplot = varQ[0:1:np.size(q)-1]
 
 plt.plot(q)
 plt.savefig("./img/trajectory.pdf")
-#plt.plot(varQplot)
-#plt.savefig("./img/varQ.pdf")
+plt.plot(varQplot)
+plt.savefig("./img/varQ.pdf")
 
 
 
