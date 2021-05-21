@@ -14,21 +14,29 @@ if not glob.glob('./*.npz'):
     resultList =glob.glob('../../csvData/*.csv')
     df = pd.read_csv(resultList[0])
     q = df.to_numpy()
-    varQ = np.zeros(np.size(q))
-    squaredQ = np.zeros(np.size(q))
-    aveQ = np.zeros(np.size(q))
+    varQ = np.zeros(len(q))
+    squaredQ = np.zeros(len(q))
+    aveQ = np.zeros(len(q))
+
+
+
+
 
     for file in resultList:
         df = pd.read_csv(file)
         q = df.to_numpy()
-        squaQ = np.power(q,2.0)
-        print(squaQ)
-        squaredQ = squaredQ + squaQ
+        squaQ = np.power(q,2)
+        print(np.size(squaQ), np.size(squaredQ))
+        for i in range(len(squaredQ)):
+            squaredQ[i] +=q[i]**2
         aveQ = aveQ + q
+
 
 norm = np.power(len(resultList),-1.0)
 varQ = norm*squaredQ - np.power(norm,2.0)*aveQ
 varQplot = varQ[0:1:np.size(q)-1]
+
+
 plt.plot(q)
 plt.savefig("./img/trajectory.pdf")
 #plt.plot(varQplot)
