@@ -154,11 +154,7 @@ void makeTimestep(Heatbath &bath, const double DT) {
 
 void write_time(std::string filename) {
     std::ofstream myFile(filename);
-    //myFile << colname << "\n";
-    for(int i = 0; i < bath.size; ++i)
-    {
-        myFile << "20% done" << "\n";
-    }
+    myFile << "10% done" << "\n";
     myFile.close();
 }
 
@@ -178,7 +174,7 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
                 throw "absolute momentum error > 10^(-9)";
             }
 
-            if (j==ceil(0.2*bath.nSave)) {
+            if (j==ceil(0.1*bath.nSave)) {
                 write_time("./data/log/timelog.txt");
             }
             j++;

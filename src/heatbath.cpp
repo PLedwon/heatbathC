@@ -33,8 +33,8 @@ double Heatbath::initialMomentum;
 
 
 int main() {
-double oscMass = pow(10,2); //mass of heaviest bath oscillator
-double M = pow(10,-3); // mass of distinguished particle
+double oscMass = pow(10,0); //mass of heaviest bath oscillator
+double M = pow(10,-2); // mass of distinguished particle
 double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
 
 double omega[N];
@@ -74,7 +74,7 @@ std::uniform_int_distribution<int> dist(0, 999999);
 int name = dist(rd);
 
 //save trajectory of distinguished particle to file
-write_csv("./data/trajectory" + std::to_string(name) + ".csv","trajectory" , bath);
+write_csv("../csvData/trajectory" + std::to_string(name) + ".csv","trajectory" , bath);
 
 
 //save errors and runtime to logfile
