@@ -28,7 +28,7 @@ if not glob.glob('./*.npz'):
 
 norm = np.power(len(resultList),-1.0)
 varQ = norm*squaredQ - np.power(norm,2.0)*aveQ
-plt.plot(varQ[0:100:np.size(q)-1])
+plt.plot(varQ[0:10:np.size(q)-1])
 plt.savefig("./img/varQ.pdf")
 
 
