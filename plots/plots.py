@@ -11,7 +11,7 @@ Omega=1.0
 
 if not glob.glob('./*.npz'):
 
-    resultList =glob.glob('../data/*.csv')
+    resultList =glob.glob('../../csvData/*.csv')
     df = pd.read_csv(resultList[0])
     q = df.to_numpy()
     varQ = np.zeros(np.size(q))
