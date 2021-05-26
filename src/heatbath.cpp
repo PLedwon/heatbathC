@@ -9,14 +9,14 @@
 #include "functions.h"
 using std::array;
 
-constexpr int N = 4000; //# of harmonic oscillators in our heatbath
-constexpr int NTOTAL = N + 1; // adding the distinguished particle
-constexpr double TSPAN[2] = {0, pow(10,3)};
-constexpr double DT =1*pow(10,-6);
+const int N = 10000; //# of harmonic oscillators in our heatbath
+const int NTOTAL = N + 1; // adding the distinguished particle
+const double TSPAN[2] = {0, 3*pow(10,2)};
+const double DT =1*pow(10,-5);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
-const double GAMMA = 1.2; // expected superdiffusion exponent
+const double GAMMA = 1.5; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
-constexpr int NSAVE = (int)fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
+const int NSAVE = (int)fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
 //initialize static heatbath members
 double Heatbath::k[NTOTAL] = {0};
@@ -35,7 +35,7 @@ double Heatbath::initialMomentum;
 int main() {
 double oscMass = pow(10,0); //mass of heaviest bath oscillator
 double M = pow(10,-2); // mass of distinguished particle
-double omegaMin=pow(N,-0.7988), omegaMax=omegaMin*pow(N,1.0688); //highest and lowest eigenfrequency of the bath
+double omegaMin=pow(N,-1.0011245), omegaMax=omegaMin*pow(N,1.2945); //highest and lowest eigenfrequency of the bath
 
 double omega[N];
 double masses[NTOTAL];
@@ -73,6 +73,9 @@ std::random_device rd;
 std::uniform_int_distribution<int> dist(0, 999999);
 int name = dist(rd);
 
+printArray_(bath.energyErr,bath.size);
+
+
 //save trajectory of distinguished particle to file
 write_csv("../csvData/trajectory" + std::to_string(name) + ".csv","trajectory" , bath);
 
@@ -83,7 +86,7 @@ std::fstream file;
 file.open(filename, std::ios_base::app | std::ios_base::in);
 if (file.is_open())
     file.precision(8);
-	file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", " << difference << std::endl;
+	file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", " << avg(bath.energyErr,bath.size) << ", " << avg(bath.momentumErr,bath.size) << ", "   << difference << std::endl;
 file.close();
 
 return 0;
