@@ -38,11 +38,26 @@ for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 
+trajectory = plt.figure(1)
 plt.plot(q)
-plt.savefig("./img/trajectory.pdf")
+plt.xlabel('t')
+plt.ylabel('single trajectory')
+trajectory.savefig("./img/trajectory.pdf")
 
+vQ = plt.figure(2)
 plt.plot(varQ)
-plt.savefig("./img/varQ.pdf")
+plt.xlabel('t')
+plt.ylabel('var(Q)')
+vQ.savefig("./img/varQ.pdf")
+
+vQlog = plt.figure(3)
+plt.plot(varQ)
+plt.xscale('log', nonposx='clip')
+plt.yscale('log', nonposy='clip')
+plt.xlabel('t')
+plt.ylabel('var(Q)')
+vQlog.savefig("./img/varQlog.pdf")
+
 
 
 
