@@ -57,7 +57,7 @@ template<size_t n>
 void computeSpringConstants(double (&k)[n], double (&masses)[n], double (&omega)[n-1]) {
   k[0] = 0;
   for (int i = 1; i < n; i++) {
-    k[i]=masses[i]*pow(omega[i-1],2);
+    k[i]=masses[i]*pow(omega[i-1],2)*pow(10,0);
   }
 }
 
@@ -159,7 +159,7 @@ void write_time(std::string filename) {
 }
 
 void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
-    int saveIndex = ceil(NTIMESTEPS/bath.nSave);
+    int saveIndex = NTIMESTEPS/bath.nSave;
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
         if (i % saveIndex == 0) {
@@ -197,23 +197,29 @@ void write_csv(std::string filename, std::string colname, Heatbath &bath){
     myFile.close();
 }
 
+void write_parameters(std::string filename, std::string colname, const int N,double DTS){
+    std::ofstream myFile(filename);
+    //myFile << colname << "\n";
 
+    // Send data to the stream
+    myFile<< std::scientific <<"DTS" << DTS << "\n";
 
+    myFile.close();
+}
 
+void write_logfile(std::string filename, int name, time_t begin, time_t end, Heatbath &bath) {
+    double maxEnergyErr = *std::max_element(bath.energyErr,bath.energyErr+bath.size);
+    double maxMomentumErr = *std::max_element(bath.momentumErr,bath.momentumErr+bath.size);
+    double difference = difftime(end,begin)/3600.0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    std::fstream file;
+    file.open(filename, std::ios_base::app | std::ios_base::in);
+    if (file.is_open())
+        file.precision(8);
+    file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", "
+         << avg(bath.energyErr, bath.size) << ", " << avg(bath.momentumErr, bath.size) << ", " << difference
+         << std::endl;
+    file.close();
+}
 
 #endif
