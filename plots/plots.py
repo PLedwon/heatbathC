@@ -14,28 +14,35 @@ if not glob.glob('./*.npz'):
     resultList =glob.glob('../../csvData/*.csv')
     df = pd.read_csv(resultList[0])
     q = df.to_numpy()
-    varQ = np.zeros(len(q))
-    squaredQ = np.zeros(len(q))
-    aveQ = np.zeros(len(q))
-
-
-
-
+    varQ = np.zeros(len(q)-1)
+    squaredQ = np.zeros(len(q)-1)
+    aveQ = np.zeros(len(q)-1)
 
     for file in resultList:
         df = pd.read_csv(file)
         q = df.to_numpy()
         squaQ = np.power(q,2)
-        for i in range(len(squaredQ)):
+        for i in range(len(squaredQ)-1):
             squaredQ[i] +=q[i]**2
             aveQ[i] += q[i]
-
 
 
 norm = np.power(len(resultList),-1.0)
 print(np.size(varQ))
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
+
+
+
+def theoDiff(x,a,b):
+    return a*np.power(x,b)
+
+#startIndex = int(math.floor,t1/dt*0.5)
+#popt, pcov = curve_fit(theoDiff,[5000:9999], varQ[5000::])
+#print(popt)
+
+
+
 
 
 trajectory = plt.figure(1)
@@ -46,9 +53,11 @@ trajectory.savefig("./img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(varQ)
+plt.plot(theoDiff(range(5000,len(varQ),popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$'))
 plt.xlabel('t')
 plt.ylabel('var(Q)')
 vQ.savefig("./img/varQ.pdf")
+plt.legend()
 
 vQlog = plt.figure(3)
 plt.plot(varQ)
