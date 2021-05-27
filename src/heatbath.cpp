@@ -11,7 +11,7 @@ using std::array;
 
 const int N = 20000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, pow(10,2)};
+const double TSPAN[2] = {0, 3*pow(10,3)};
 const double DT =1*pow(10,-5);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.5; // expected superdiffusion exponent
