@@ -9,12 +9,12 @@
 #include "functions.h"
 using std::array;
 
-const int N = 20000; //# of harmonic oscillators in our heatbath
+const int N = 10000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, 3*pow(10,3)};
+const double TSPAN[2] = {0, 2.5*pow(10,1)};
 const double DT =1*pow(10,-5);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
-const double GAMMA = 1.5; // expected superdiffusion exponent
+const double GAMMA = 1.2; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const int NSAVE = (int) fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
@@ -33,9 +33,9 @@ double Heatbath::initialMomentum;
 
 
 int main() {
-    double oscMass = pow(10,4); //mass of heaviest bath oscillator
+    double oscMass = pow(10,3); //mass of heaviest bath oscillator
     double M = pow(10,0); // mass of distinguished particle
-    double omegaMin=pow(N,-1.019448), omegaMax=omegaMin*pow(N,1.2662); //highest and lowest eigenfrequency of the bath
+    double omegaMin=pow(N,-0.818388888), omegaMax=omegaMin*pow(N,1.0619444444444); //highest and lowest eigenfrequency of the bath
 
     double omega[N];
     double masses[NTOTAL];
