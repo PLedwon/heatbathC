@@ -11,7 +11,7 @@ using std::array;
 
 const int N = 10000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, 2.5*pow(10,1)};
+const double TSPAN[2] = {0, 2.5*pow(10,3)};
 const double DT =1*pow(10,-5);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.2; // expected superdiffusion exponent
@@ -74,6 +74,8 @@ int main() {
     //save errors and runtime to logfile
     std::string filename("./data/log/logfile.txt");
     write_logfile(filename, bathName, begin, end, bath);
+    double DTS = TSPAN[1]/ (double bath.nSave)
+    write_parameters("./data/parameters.csv",N,GAMMA,DTS,TSPAN[1]);
 
     return 0;
 }

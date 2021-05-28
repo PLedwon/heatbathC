@@ -197,13 +197,10 @@ void write_csv(std::string filename, std::string colname, Heatbath &bath){
     myFile.close();
 }
 
-void write_parameters(std::string filename, std::string colname, const int N,double DTS){
+void write_parameters(std::string filename, const int N , const double GAMMA , double DTS, const double tspan){
     std::ofstream myFile(filename);
-    //myFile << colname << "\n";
-
-    // Send data to the stream
-    myFile<< std::scientific <<"DTS" << DTS << "\n";
-
+    myFile << "bathsize, gamma, DTS, t" << "\n";
+    myFile<< std::scientific << N <<", " << GAMMA  << ", " << DTS << ", " << tspan  "\n";
     myFile.close();
 }
 
@@ -221,5 +218,7 @@ void write_logfile(std::string filename, int name, time_t begin, time_t end, Hea
          << std::endl;
     file.close();
 }
+
+
 
 #endif
