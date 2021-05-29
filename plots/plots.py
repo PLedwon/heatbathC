@@ -53,7 +53,7 @@ trajectory.savefig("./img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(varQ)
-plt.plot(theoDiff(range(5000,len(varQ),popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$'))
+#plt.plot(theoDiff(range(5000,len(varQ),popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$'))
 plt.xlabel('t')
 plt.ylabel('var(Q)')
 vQ.savefig("./img/varQ.pdf")
