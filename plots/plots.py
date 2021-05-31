@@ -33,7 +33,9 @@ for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 dts=0.2
-t=range(0,len(q)-1)
+t=np.arange(0,len(q)-1)
+print(np.size(t) )
+#t = t * dts
 
 def theoDiff(x,a,b):
     return a*np.power(x,b)
@@ -53,7 +55,7 @@ plt.ylabel('single trajectory')
 trajectory.savefig("./img/trajectory.pdf")
 
 vQ = plt.figure(2)
-plt.plot(varQ)
+plt.plot(t,varQ)
 #plt.plot(theoDiff(range(5000,len(varQ),popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$'))
 plt.xlabel('t')
 plt.ylabel('var(Q)')
@@ -61,7 +63,7 @@ vQ.savefig("./img/varQ.pdf")
 plt.legend()
 
 vQlog = plt.figure(3)
-plt.plot(varQ)
+plt.plot(t,varQ)
 plt.xscale('log', nonposx='clip')
 plt.yscale('log', nonposy='clip')
 plt.xlabel('t')
