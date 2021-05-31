@@ -34,12 +34,13 @@ for i in range(len(varQ)):
 dts=0.2
 t=np.arange(0,len(q)-1)
 t = t * dts
+gamma=1.8
 
 def theoDiff(x,a,b):
-    return a*np.power(x,b)
+    return a*np.power(x,gamma)
 
 #startIndex = int(math.floor,t1/dt*0.5)
-startIndex = int(np.floor(len(t)*0.5))
+startIndex = int(np.floor(len(t)*0.6))
 endIndex =int(len(t)-1)
 popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
 print(popt)
@@ -64,6 +65,7 @@ plt.legend()
 
 vQlog = plt.figure(3)
 plt.plot(t,varQ)
+plt.plot(theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xscale('log', nonposx='clip')
 plt.yscale('log', nonposy='clip')
 plt.xlabel('t')
