@@ -37,7 +37,7 @@ t = t * dts
 gamma=1.8
 
 def theoDiff(x,a,b):
-    return a*np.power(x,gamma)
+    return a*np.power(x,gamma)+b
 
 #startIndex = int(math.floor,t1/dt*0.5)
 startIndex = int(np.floor(len(t)*0.6))
