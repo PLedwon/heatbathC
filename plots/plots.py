@@ -22,7 +22,7 @@ if not glob.glob('./*.npz'):
         df = pd.read_csv(file)
         q = df.to_numpy()
         squaQ = np.power(q,2)
-        for i in range(len(squaredQ)-1):
+        for i in range(len(squaredQ)):
             squaredQ[i] +=q[i]**2
             aveQ[i] += q[i]
 
@@ -32,7 +32,8 @@ print(np.size(varQ))
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
-
+dts=0.2
+t=range(0,len(q)-1)
 
 def theoDiff(x,a,b):
     return a*np.power(x,b)
