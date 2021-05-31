@@ -39,8 +39,10 @@ def theoDiff(x,a,b):
     return a*np.power(x,b)
 
 #startIndex = int(math.floor,t1/dt*0.5)
-#popt, pcov = curve_fit(theoDiff,[5000:9999], varQ[5000::])
-#print(popt)
+startIndex = int(np.floor(len(t)*0.5))
+endIndex =int(len(t)-1)
+popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
+print(popt)
 
 
 
@@ -54,7 +56,7 @@ trajectory.savefig("./img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(t,varQ)
-#plt.plot(theoDiff(range(5000,len(varQ),popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$'))
+plt.plot(theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xlabel('t')
 plt.ylabel('var(Q)')
 vQ.savefig("./img/varQ.pdf")
