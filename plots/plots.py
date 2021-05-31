@@ -28,14 +28,12 @@ if not glob.glob('./*.npz'):
 
 
 norm = np.power(len(resultList),-1.0)
-print(np.size(varQ))
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
 dts=0.2
 t=np.arange(0,len(q)-1)
-print(np.size(t) )
-#t = t * dts
+t = t * dts
 
 def theoDiff(x,a,b):
     return a*np.power(x,b)
