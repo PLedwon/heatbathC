@@ -34,13 +34,13 @@ for i in range(len(varQ)):
 dts=0.2
 t=np.arange(0,len(q)-1)
 t = t * dts
-gamma=1.8
+gamma=1.9
 
 def theoDiff(x,a,b):
     return a*np.power(x,gamma)+b
 
 #startIndex = int(math.floor,t1/dt*0.5)
-startIndex = int(np.floor(len(t)*0.2))
+startIndex = int(np.floor(len(t)*0.3))
 endIndex =int(len(t)-1)
 popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
 print(popt)
