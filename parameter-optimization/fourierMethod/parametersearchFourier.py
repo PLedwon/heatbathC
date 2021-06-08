@@ -16,21 +16,21 @@ oscMass=1.0 #1.0 #mass of heaviest bath oscillator
 M=0.01# mass of the distinguished particle
 #masses=m*np.ones(N)
 t0=0.0
-t1=5000.0
+t1=2000.0
 dt=2.0#01.0/float(N)#(t1-t0)/100.0
 dt=(t1-t0)/float(N)
 Omega=1.0
-gridsize = 51 #should be (M*10)-1 for nice values
+gridsize = 5 #should be (M*10)-1 for nice values
 timesteps=np.arange(t0,t1,dt)
 #timesteps=np.logspace(0.0,np.log10(t1),2000)#np.arange(0,t1,1.0)
-lowerNRange = np.linspace(-1.5,-1.0,gridsize)
-upperNRange = np.linspace(1.2,1.5,gridsize)
+lowerNRange = np.linspace(-0.95,-0.85,gridsize)
+upperNRange = np.linspace(1.2,1.25,gridsize)
 #lowerNRange =np.arange(-0.882,-0.880,0.0005)
 #upperNRange =np.arange(1.171,1.173,0.0005)
 cutoff = 10000
 kernelDiff = cutoff*np.ones((len(lowerNRange),len(upperNRange)))
 
-gamma=1.2
+gamma=1.5
 
 
 def memoryKernel(timesteps):
@@ -40,10 +40,9 @@ def memoryKernel(timesteps):
 
 massKifft=ifft(memoryKernel(np.arange(t0,t1,(t1-t0)/float(N))))
 realK = memoryKernel(timesteps)
-def computeMassesFourierFourier(omega):
+def computeMassesFourier(omega):
        return oscMass * np.power(omega,-2.0) * massKifft
 
-def computeMasses(omega)
 
 def setFrequencyRange(a,b):
             omega_min=N**a

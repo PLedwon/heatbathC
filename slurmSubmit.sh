@@ -10,7 +10,7 @@ pwd; hostname; date
 
 for i in {1..150}
 do
-   #srun --exclude=dong44 ./bin/heatbath &
+#   srun --exclude=dong44 ./bin/heatbath &
    srun ./bin/heatbath &
 done
 

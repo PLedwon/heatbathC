@@ -82,6 +82,15 @@ void setEigenfrequencies(double (&omega)[n], double omegaMin, double omegaMax) {
 }
 
 template< size_t n>
+void setRandomEigenfrequencies(double (&omega)[n], double omegaMin, double omegaMax) {
+
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(omegaMin,omegaMax);
+
+    for(int i = 0; i < n ; ++i) // equidistant distribution of eigenfrequencies of the harmonic oscillators
+        omega[i] = distribution(generator);
+}
+template< size_t n>
 void invertMasses(double (&invM)[n], double (&masses)[n]) {
     for (int i = 0; i < n; ++i) {
        invM[i] = 1/masses[i];
@@ -166,6 +175,8 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
+            printf("%e", bath.energyErr[j]);
+            std::cout << '\n';
 
             if (bath.energyErr[j]>pow(10,-4)) {
                 throw "relative energy error > 10^(-4)";
@@ -205,8 +216,8 @@ void write_parameters(std::string filename, const int N , const double GAMMA , d
 }
 
 void write_logfile(std::string filename, int name, time_t begin, time_t end, Heatbath &bath) {
-    double maxEnergyErr = *std::max_element(bath.energyErr,bath.energyErr+bath.size);
-    double maxMomentumErr = *std::max_element(bath.momentumErr,bath.momentumErr+bath.size);
+    double maxEnergyErr = *std::max_element(bath.energyErr,bath.energyErr+bath.nSave);
+    double maxMomentumErr = *std::max_element(bath.momentumErr,bath.momentumErr+bath.nSave);
     double difference = difftime(end,begin)/3600.0;
 
     std::fstream file;
@@ -214,7 +225,7 @@ void write_logfile(std::string filename, int name, time_t begin, time_t end, Hea
     if (file.is_open())
         file.precision(2);
     file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", "
-         << avg(bath.energyErr, bath.size) << ", " << avg(bath.momentumErr, bath.size) << ", " << difference
+         << avg(bath.energyErr, bath.nSave) << ", " << avg(bath.momentumErr, bath.nSave) << ", " << difference
          << std::endl;
     file.close();
 }

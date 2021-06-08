@@ -9,12 +9,12 @@
 #include "functions.h"
 using std::array;
 
-const int N = 10000; //# of harmonic oscillators in our heatbath
+const int N = 40000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, pow(10,0)};
-const double DT =1*pow(10,-6);
+const double TSPAN[2] = {0, 1*pow(10,1)};
+const double DT =1*pow(10,-3);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
-const double GAMMA = 1.8; // expected superdiffusion exponent
+const double GAMMA = 1.7; // expected superdiffusion exponent
 const double BETA = 1.0; //kB*T
 const int NSAVE = (int) fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
@@ -34,17 +34,20 @@ double Heatbath::initialMomentum;
 
 int main() {
     double oscMass = pow(10,0); //mass of heaviest bath oscillator
-    double M = pow(10,-3); // mass of distinguished particle
-    double omegaMin=pow(N,-0.91), omegaMax=omegaMin*pow(N,1.2); //highest and lowest eigenfrequency of the bath
+    double M = pow(10,-2); // mass of distinguished particle
+    double omegaMin=pow(N,-0.9514285714285714), omegaMax=omegaMin*pow(N,1.0125); //highest and lowest eigenfrequency of the bath
 
     double omega[N];
     double masses[NTOTAL];
 
     //setting bath parameters
+//    setEigenfrequencies(omega,omegaMin,omegaMax);
     setEigenfrequencies(omega,omegaMin,omegaMax);
     computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
     computeSpringConstants(Heatbath::k, masses, omega);
     invertMasses(Heatbath::invM,masses);
+
+    printf("%e", masses[0]/masses[N-1]);
 
     Heatbath bath;
 
@@ -76,6 +79,7 @@ int main() {
     write_logfile(filename, bathName, begin, end, bath);
     double DTS = TSPAN[1]/ ((double) bath.nSave);
     write_parameters("./data/parameters.csv",N,GAMMA,DTS,TSPAN[1]);
+
 
     return 0;
 }
