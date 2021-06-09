@@ -34,7 +34,7 @@ for i in range(len(varQ)):
 dts=0.2
 t=np.arange(0,len(q)-1)
 t = t * dts
-gamma=1.9
+gamma=1.6
 
 def theoDiff(x,a,b):
     return a*np.power(x,gamma)+b
