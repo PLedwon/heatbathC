@@ -154,7 +154,7 @@ void makeTimestep(Heatbath &bath, const double DT) {
 }
 
  double energyError(Heatbath &bath){
-  return (H(bath)-bath.initialEnergy)/bath.initialEnergy;
+  return std::abs((H(bath)-bath.initialEnergy)/bath.initialEnergy);
  }
 
  double momentumError(Heatbath &bath) {
@@ -175,7 +175,6 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-            printf("%e", bath.energyErr[j]);
             std::cout << '\n';
 
             if (bath.energyErr[j]>pow(10,-4)) {
@@ -200,7 +199,7 @@ void write_csv(std::string filename, std::string colname, Heatbath &bath){
     //myFile << colname << "\n";
 
     // Send data to the stream
-    for(int i = 0; i < bath.size; ++i)
+    for(int i = 0; i < bath.nSave; ++i)
     {
         myFile << bath.trajectory[i] << "\n";
     }

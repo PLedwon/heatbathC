@@ -11,7 +11,7 @@ Omega=1.0
 
 if not glob.glob('./*.npz'):
 
-    resultList =glob.glob('../../csvData/*.csv')
+    resultList =glob.glob('../csvData/*.csv')
     df = pd.read_csv(resultList[0])
     q = df.to_numpy()
     varQ = np.zeros(len(q)-1)
@@ -31,9 +31,7 @@ norm = np.power(len(resultList),-1.0)
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
-dts=0.2
 t=np.arange(0,len(q)-1)
-t = t * dts
 gamma=1.6
 
 def theoDiff(x,a,b):
@@ -54,14 +52,14 @@ trajectory = plt.figure(1)
 plt.plot(q)
 plt.xlabel('t')
 plt.ylabel('single trajectory')
-trajectory.savefig("./img/trajectory.pdf")
+trajectory.savefig("./plots/img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(t,varQ)
 plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xlabel('t')
 plt.ylabel('var(Q)')
-vQ.savefig("./img/varQ.pdf")
+vQ.savefig("./plots/img/varQ.pdf")
 plt.legend()
 
 vQlog = plt.figure(3)
@@ -71,7 +69,7 @@ plt.xscale('log', nonposx='clip')
 plt.yscale('log', nonposy='clip')
 plt.xlabel('t')
 plt.ylabel('var(Q)')
-vQlog.savefig("./img/varQlog.pdf")
+vQlog.savefig("./plots/img/varQlog.pdf")
 
 
 
