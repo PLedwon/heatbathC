@@ -15,8 +15,8 @@ const double TSPAN[2] = {0, 2*pow(10,3)};
 const double DT =5*pow(10,-6);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.6; // expected superdiffusion exponent
-const double BETA = 5*pow(10,-3); // 1/(kB*T)
-const int NSAVE = (int) fmin(pow(10,5),NTIMESTEPS); // max outfile size capped at about 10 MB
+const double BETA = 1*pow(10,22); // 1/(kB*T)
+const int NSAVE = (int) fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
 //initialize static heatbath members
 double Heatbath::k[NTOTAL] = {0};
@@ -34,15 +34,15 @@ double Heatbath::initialMomentum;
 
 int main() {
     double oscMass = pow(10,1); //mass of heaviest bath oscillator
-    double M = pow(10,-2); // mass of distinguished particle
+    double M = pow(10,-3); // mass of distinguished particle
     double omegaMin=pow(N,-0.94333333333), omegaMax=omegaMin*pow(N,1.2227777777); //highest and lowest eigenfrequency of the bath
 
     double omega[N];
     double masses[NTOTAL];
 
     //setting bath parameters
-//    setEigenfrequencies(omega,omegaMin,omegaMax);
-    setRandomEigenfrequencies(omega,omegaMin,omegaMax);
+    setEigenfrequencies(omega,omegaMin,omegaMax);
+//    setRandomEigenfrequencies(omega,omegaMin,omegaMax);
     computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
     computeSpringConstants(Heatbath::k, masses, omega);
     invertMasses(Heatbath::invM,masses);

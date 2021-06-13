@@ -106,7 +106,7 @@ void generateInitialConditions(Heatbath &bath, double M,  double masses[], const
     double pref=pow(BETA,-0.5);
 
     //set the initial conditions for the distinguished particle
-    bath.q[0] = 0;
+    bath.q[0] = 0; //
     bath.p[0] = pref * pow(M,0.5) * d(gen);
 
     for (int i = 1; i < bath.size; ++i) {
@@ -122,7 +122,7 @@ void generateInitialConditions(Heatbath &bath, double M,  double masses[], const
     psum = sum(bath.p,bath.size);
 
     //check that total momentum is close to zero
-    if (std::abs(psum) > pow(10,-12)) {
+    if (std::abs(psum) > pow(10,-7)) {
         throw "Error: CoM velocity is not 0 while initializing heatbath";
     }
     bath.initialEnergy = H(bath);
@@ -158,7 +158,8 @@ void makeTimestep(Heatbath &bath, const double DT) {
  }
 
  double momentumError(Heatbath &bath) {
-     return std::abs(bath.initialMomentum-sum(bath.p,bath.size));
+     return std::abs(bath.initialMomentum-sum(bath.p,bath.size)/pow(10,-10));
+     //return bath.initialMomentum-sum(bath.p,bath.size);
  }
 
 void write_time(std::string filename) {
@@ -168,20 +169,23 @@ void write_time(std::string filename) {
 }
 
 void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
-    int saveIndex = NTIMESTEPS/bath.nSave;
+    int saveIndex = ceil(NTIMESTEPS/bath.nSave);
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
         if (i % saveIndex == 0) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-            std::cout << '\n';
+//            printf("E: %e", bath.energyErr[j]);
+//            std::cout << '\n';
+//            printf("M: %e", bath.momentumErr[j]);
+//            std::cout << '\n';
 
             if (bath.energyErr[j]>pow(10,-4)) {
                 throw "relative energy error > 10^(-4)";
             }
-            if (bath.momentumErr[j]>pow(10,-9)) {
-                throw "absolute momentum error > 10^(-9)";
+            if (bath.momentumErr[j]>5*pow(10,-7)) {
+                throw "absolute momentum error > 10^(-7)";
             }
 
             if (j==ceil(0.1*bath.nSave)) {
@@ -224,7 +228,7 @@ void write_logfile(std::string filename, int name, time_t begin, time_t end, Hea
     if (file.is_open())
         file.precision(2);
     file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", "
-         << avg(bath.energyErr, bath.nSave) << ", " << avg(bath.momentumErr, bath.nSave) << ", " << difference
+         << avg(bath.energyErr, bath.nSave-1) << ", " << avg(bath.momentumErr, bath.nSave-1) << ", " << difference
          << std::endl;
     file.close();
 }
