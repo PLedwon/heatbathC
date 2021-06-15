@@ -12,10 +12,10 @@ using std::array;
 const int N = 40000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
 const double TSPAN[2] = {0, 2*pow(10,3)};
-const double DT =5*pow(10,-6);
+const double DT =2*pow(10,-6);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.6; // expected superdiffusion exponent
-const double BETA = 1*pow(10,22); // 1/(kB*T)
+const double BETA = 1*pow(10,20); // 1/(kB*T)
 const int NSAVE = (int) fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 
 //initialize static heatbath members
