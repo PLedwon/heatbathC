@@ -169,23 +169,30 @@ void write_time(std::string filename) {
 }
 
 void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
-    int saveIndex = ceil(NTIMESTEPS/bath.nSave);
+    int saveIndex = NTIMESTEPS/bath.nSave;
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
         if (i % saveIndex == 0) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-//            printf("E: %e", bath.energyErr[j]);
-//            std::cout << '\n';
-//            printf("M: %e", bath.momentumErr[j]);
-//            std::cout << '\n';
+            if (bath.trajectory[0] !=0) {
+                printf("initial position = %e \n",bath.trajectory[0]);
+            }
+  //          printf("E: %e", bath.energyErr[j]);
+  //          std::cout << '\n';
+  //          printf("M: %e", bath.momentumErr[j]);
+  //          std::cout << '\n';
 
             if (bath.energyErr[j]>pow(10,-4)) {
+                printf("energy error = %e", bath.energyErr[j]);
                 throw "relative energy error > 10^(-4)";
+                std::cout << '\n';
             }
             if (bath.momentumErr[j]>5*pow(10,-7)) {
+                printf("momentum error = %e", bath.momentumErr[j]);
                 throw "absolute momentum error > 10^(-7)";
+                std::cout << '\n';
             }
 
             if (j==ceil(0.1*bath.nSave)) {

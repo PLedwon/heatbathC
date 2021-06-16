@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import math
 import scipy
 from scipy.optimize import curve_fit
+from random import randrange
 import pandas as pd
 
 Omega=1.0
@@ -21,18 +22,34 @@ if not glob.glob('./*.npz'):
     for file in resultList:
         df = pd.read_csv(file)
         q = df.to_numpy()
+        print(len(q))
         squaQ = np.power(q,2)
         for i in range(len(squaredQ)):
             squaredQ[i] +=q[i]**2
             aveQ[i] += q[i]
+
+trajectories = np.zeros(len(q)-1,6)
+    for i in range(0,6):
+        random_index = randrange(len(resultList))
+        df = pd.read_csv(resultList[0])
+        trajectories[:,i]= df.to_numpy()
+   
+
+ 
 
 
 norm = np.power(len(resultList),-1.0)
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
 
+stdMat = np.zeros(len(q)-1)
+#for file in resultList:
+
+
 t=np.arange(0,len(q)-1)
 gamma=1.6
+
+print("average position", aveQ)
 
 def theoDiff(x,a,b):
     return a*np.power(x,gamma)#+b
@@ -49,9 +66,9 @@ print(popt)
 
 
 trajectory = plt.figure(1)
-plt.plot(q,'r+')
+plt.plot(trajectories)
 plt.xlabel('t')
-plt.ylabel('single trajectory')
+plt.ylabel('sample trajectory')
 trajectory.savefig("./plots/img/trajectory.pdf")
 
 vQ = plt.figure(2)
