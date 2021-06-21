@@ -172,18 +172,15 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
     int saveIndex = NTIMESTEPS/bath.nSave;
     int j=0;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
-        if (i % saveIndex == 0) {
+        makeTimestep(bath, DT);
+        if (i % saveIndex == 0 && j < bath.nSave) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-            if (bath.trajectory[0] !=0) {
+           /* if (bath.trajectory[0] !=0) {
                 printf("initial position = %e \n",bath.trajectory[0]);
             }
-  //          printf("E: %e", bath.energyErr[j]);
-  //          std::cout << '\n';
-  //          printf("M: %e", bath.momentumErr[j]);
-  //          std::cout << '\n';
-
+            */
             if (bath.energyErr[j]>pow(10,-4)) {
                 printf("energy error = %e", bath.energyErr[j]);
                 throw "relative energy error > 10^(-4)";
@@ -200,7 +197,6 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
             }
             j++;
         }
-        makeTimestep(bath, DT);
     }
 }
 
@@ -235,7 +231,7 @@ void write_logfile(std::string filename, int name, time_t begin, time_t end, Hea
     if (file.is_open())
         file.precision(2);
     file << std::scientific << std::to_string(name) << ", " << maxEnergyErr << ", " << maxMomentumErr << ", "
-         << avg(bath.energyErr, bath.nSave-1) << ", " << avg(bath.momentumErr, bath.nSave-1) << ", " << difference
+         << avg(bath.energyErr, bath.nSave) << ", " << avg(bath.momentumErr, bath.nSave) << ", " << difference
          << std::endl;
     file.close();
 }
