@@ -49,7 +49,7 @@ stdMat = np.zeros(len(q)-1)
 t=np.arange(0,len(q)-1)
 gamma=1.7
 
-print("average position", aveQ)
+print("average position", norm*aveQ)
 
 def theoDiff(x,a,b):
     return a*np.power(x,gamma)#+b

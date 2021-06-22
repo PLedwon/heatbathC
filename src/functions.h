@@ -158,7 +158,7 @@ void makeTimestep(Heatbath &bath, const double DT) {
  }
 
  double momentumError(Heatbath &bath) {
-     return std::abs(bath.initialMomentum-sum(bath.p,bath.size)/pow(10,-10));
+     return std::abs(bath.initialMomentum-sum(bath.p,bath.size));
      //return bath.initialMomentum-sum(bath.p,bath.size);
  }
 

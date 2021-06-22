@@ -8,9 +8,9 @@
 #SBATCH --output=serial_test_%j.log   # Standard output and error log
 pwd; hostname; date
 
-for i in {1..150}
+for i in {1..80}
 do
-   srun --exclude=dong44,gdong[1-8],dong[1-3] ./bin/heatbath &
-#   srun ./bin/heatbath &
+#   srun --exclude=dong44,gdong[1-8],dong[1-3] ./bin/heatbath &
+   srun ./bin/heatbath &
 done
 
