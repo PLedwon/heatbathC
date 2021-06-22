@@ -11,7 +11,7 @@ using std::array;
 
 const int N = 60000; //# of harmonic oscillators in our heatbath
 const int NTOTAL = N + 1; // adding the distinguished particle
-const double TSPAN[2] = {0, 1*pow(10,0)};
+const double TSPAN[2] = {0, 1*pow(10,3)};
 const double DT =3*pow(10,-6);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
 const double GAMMA = 1.7; // expected superdiffusion exponent
@@ -72,7 +72,7 @@ int main() {
     int bathName = dist(rd);
 
     //save trajectory of distinguished particle to file
-    //  write_csv("../csvData/trajectory" + std::to_string(bathName) + ".csv","trajectory" , bath);
+    write_csv("../csvData/trajectory" + std::to_string(bathName) + ".csv","trajectory" , bath);
     //save errors and runtime to logfile
     std::string filename("./data/log/logfile.txt");
     write_logfile(filename, bathName, begin, end, bath);

@@ -28,11 +28,11 @@ if not glob.glob('./*.npz'):
             squaredQ[i] +=q[i]**2
             aveQ[i] += q[i]
 
-trajectories = np.zeros(len(q)-1,6)
-    for i in range(0,6):
-        random_index = randrange(len(resultList))
-        df = pd.read_csv(resultList[0])
-        trajectories[:,i]= df.to_numpy()
+#trajectories = np.zeros(len(q)-1,6)
+#    for i in range(0,6):
+#        random_index = randrange(len(resultList))
+#        df = pd.read_csv(resultList[0])
+#        trajectories[:,i]= df.to_numpy()
    
 
  
@@ -47,7 +47,7 @@ stdMat = np.zeros(len(q)-1)
 
 
 t=np.arange(0,len(q)-1)
-gamma=1.6
+gamma=1.7
 
 print("average position", aveQ)
 
@@ -55,7 +55,7 @@ def theoDiff(x,a,b):
     return a*np.power(x,gamma)#+b
 
 #startIndex = int(math.floor,t1/dt*0.5)
-startIndex = int(np.floor(len(t)*0.3))
+startIndex = int(np.floor(len(t)*0.5))
 endIndex =int(len(t)-1)
 #endIndex = int(np.floor(len(t)*0.24))
 popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
@@ -65,11 +65,11 @@ print(popt)
 
 
 
-trajectory = plt.figure(1)
-plt.plot(trajectories)
-plt.xlabel('t')
-plt.ylabel('sample trajectory')
-trajectory.savefig("./plots/img/trajectory.pdf")
+#trajectory = plt.figure(1)
+#plt.plot(trajectories)
+#plt.xlabel('t')
+#plt.ylabel('sample trajectory')
+#trajectory.savefig("./plots/img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(t,varQ)

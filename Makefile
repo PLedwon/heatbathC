@@ -11,8 +11,6 @@ profile:
 	gprof ./bin/heatbath
 
 plot:
-	g++ -Ofast -o ./bin/heatbath ./src/heatbath.cpp -lm
-	./bin/heatbath
 	python3 ./plots/plots.py
 
 clean:
