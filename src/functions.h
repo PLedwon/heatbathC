@@ -103,6 +103,7 @@ void generateInitialConditions(Heatbath &bath, double M,  double masses[], const
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<> d{0,1};
+
     double pref=pow(BETA,-0.5);
 
     //set the initial conditions for the distinguished particle
@@ -169,18 +170,25 @@ void write_time(std::string filename) {
 }
 
 void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
+
+   bath.trajectory[0]=bath.q[0];
+
     int saveIndex = NTIMESTEPS/bath.nSave;
-    int j=0;
+    int j=1;
     for (int i = 0; i < NTIMESTEPS ; ++i) {
         makeTimestep(bath, DT);
         if (i % saveIndex == 0 && j < bath.nSave) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
+            printf("Q = %e", bath.trajectory[j]);
+            std::cout << '\n';
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-           /* if (bath.trajectory[0] !=0) {
-                printf("initial position = %e \n",bath.trajectory[0]);
-            }
-            */
+            printf("energy error = %e", bath.energyErr[j]);
+            std::cout << '\n';
+            /* if (bath.trajectory[0] !=0) {
+                 printf("initial position = %e \n",bath.trajectory[0]);
+             }
+             */
             if (bath.energyErr[j]>pow(10,-4)) {
                 printf("energy error = %e", bath.energyErr[j]);
                 throw "relative energy error > 10^(-4)";

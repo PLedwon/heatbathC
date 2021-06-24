@@ -65,11 +65,12 @@ print(popt)
 
 
 
-#trajectory = plt.figure(1)
+trajectory = plt.figure(1)
 #plt.plot(trajectories)
-#plt.xlabel('t')
-#plt.ylabel('sample trajectory')
-#trajectory.savefig("./plots/img/trajectory.pdf")
+plt.plot(q)
+plt.xlabel('t')
+plt.ylabel('sample trajectory')
+trajectory.savefig("./plots/img/trajectory.pdf")
 
 vQ = plt.figure(2)
 plt.plot(t,varQ)
