@@ -8,7 +8,7 @@ from scipy.fftpack import fft,ifft
 
 ########################################################################################################################
 #set parameters
-N=20000 #number of bath oscillators
+N=40000 #number of bath oscillators
 beta=1.0 #1\kB*T
 Q0=0.0 #starting pos/impulse of distinguished particle
 P0=0.0
