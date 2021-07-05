@@ -179,12 +179,12 @@ void solveEOM(Heatbath &bath, const double DT, const long long NTIMESTEPS) {
         makeTimestep(bath, DT);
         if (i % saveIndex == 0 && j < bath.nSave) {
             bath.trajectory[j] = bath.q[0]; //  save most recent position of distinguished particle
-            printf("Q = %e", bath.trajectory[j]);
-            std::cout << '\n';
+            //printf("Q = %e", bath.trajectory[j]);
+            //std::cout << '\n';
             bath.energyErr[j] = energyError(bath);
             bath.momentumErr[j] = momentumError(bath);
-            printf("energy error = %e", bath.energyErr[j]);
-            std::cout << '\n';
+            //printf("energy error = %e", bath.energyErr[j]);
+            //std::cout << '\n';
             /* if (bath.trajectory[0] !=0) {
                  printf("initial position = %e \n",bath.trajectory[0]);
              }
