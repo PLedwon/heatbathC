@@ -36,14 +36,14 @@ double Heatbath::initialMomentum;
 int main() {
     double oscMass = pow(10,2); //mass of heaviest bath oscillator
     double M = 1*pow(10,-1); // mass of distinguished particle
-    double omegaMin=pow(N,-0.84333333333333333), omegaMax=omegaMin*pow(N,1.052222222); //highest and lowest eigenfrequency of the bath
+    double omegaMin=pow(N,-0.9), omegaMax=omegaMin*pow(N,0.92166666666666); //highest and lowest eigenfrequency of the bath
 
     double omega[N];
     double masses[NTOTAL];
 
     //setting bath parameters
-    setEigenfrequencies(omega,omegaMin,omegaMax);
-//    setRandomEigenfrequencies(omega,omegaMin,omegaMax);
+//    setEigenfrequencies(omega,omegaMin,omegaMax);
+    setRandomEigenfrequencies(omega,omegaMin,omegaMax);
     computeMasses(masses,oscMass,M,omega,omegaMin,GAMMA);
     computeSpringConstants(Heatbath::k, masses, omega);
     invertMasses(Heatbath::invM,masses);
