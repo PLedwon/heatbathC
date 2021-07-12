@@ -14,7 +14,7 @@ const int NTOTAL = N + 1; // adding the distinguished particle
 const double TSPAN[2] = {0, 6*pow(10,3)};
 const double DT =1*pow(10,-5);
 const long long NTIMESTEPS = ceil((TSPAN[1]-TSPAN[0])/DT);
-const double GAMMA = 1.2; // expected superdiffusion exponent
+const double GAMMA = 1.5; // expected superdiffusion exponent
 const double BETA = 1*pow(10,3); // 1/(kB*T)
 const int NSAVE = (int) fmin(pow(10,4),NTIMESTEPS); // max outfile size capped at about 10 MB
 //const int NSAVE = pow(10,4); // max outfile size capped at about 10 MB
@@ -36,7 +36,7 @@ double Heatbath::initialMomentum;
 int main() {
     double oscMass = pow(10,2); //mass of heaviest bath oscillator
     double M = 1*pow(10,-1); // mass of distinguished particle
-    double omegaMin=pow(N,-0.9), omegaMax=omegaMin*pow(N,0.92166666666666); //highest and lowest eigenfrequency of the bath
+    double omegaMin=pow(N,-0.9311111111), omegaMax=omegaMin*pow(N,0.96); //highest and lowest eigenfrequency of the bath
 
     double omega[N];
     double masses[NTOTAL];

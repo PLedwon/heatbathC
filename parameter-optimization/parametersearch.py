@@ -17,14 +17,14 @@ dt=5.0
 Omega=1.0
 gridsize = 19 #should be (M*10)-1 for nice values
 timesteps=np.arange(0.0,t1,dt)
-lowerNRange = np.linspace(-0.92,-0.89,gridsize)
-upperNRange = np.linspace(0.91,0.94,gridsize)
+lowerNRange = np.linspace(-0.94,-0.9,gridsize)
+upperNRange = np.linspace(0.94,0.98,gridsize)
 #lowerNRange =np.arange(-1.1,-0.9,0.1)
 #upperNRange =np.arange(0.8,1.3,0.1)
 cutoff = 10000
 kernelDiff = cutoff*np.ones((len(lowerNRange),len(upperNRange)))
 
-gamma=1.2
+gamma=1.5
 
 if gamma>1.0:
     diffType='super'

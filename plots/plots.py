@@ -47,7 +47,7 @@ stdMat = np.zeros(len(q)-1)
 
 
 t=np.arange(0,len(q)-1)
-gamma=1.2
+gamma=1.5
 
 print("average position", norm*aveQ)
 
