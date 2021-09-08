@@ -83,7 +83,7 @@ plt.legend()
 
 vQlog = plt.figure(3)
 plt.plot(t,varQ)
-plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
+plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xscale('log', nonposx='clip')
 plt.yscale('log', nonposy='clip')
 plt.xlabel('t')
