@@ -53,7 +53,7 @@ gamma=1.5
 print("average position", norm*aveQ)
 
 def theoDiff(x,a,b):
-    return a*np.power(x,gamma)#+b
+    return a*np.power(x,b)#+b
 
 #startIndex = int(math.floor,t1/dt*0.5)
 startIndex = int(np.floor(len(t)*0.7))
