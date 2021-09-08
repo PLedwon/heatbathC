@@ -11,20 +11,20 @@ N=60000 #number of bath oscillators
 oscMass=1.0 #1.0 #mass of heaviest bath oscillator
 M=0.01# mass of the distinguished particle
 t0=0.0
-t1=6000
+t1=2000
 #dt=0.0002#01.0/float(N)#(t1-t0)/100.0
-dt=5.0
+dt=2.0
 Omega=1.0
 gridsize = 19 #should be (M*10)-1 for nice values
 timesteps=np.arange(0.0,t1,dt)
-lowerNRange = np.linspace(-0.94,-0.9,gridsize)
-upperNRange = np.linspace(0.94,0.98,gridsize)
+lowerNRange = np.linspace(-1.0,-0.8,gridsize)
+upperNRange = np.linspace(0.9,1.2,gridsize)
 #lowerNRange =np.arange(-1.1,-0.9,0.1)
 #upperNRange =np.arange(0.8,1.3,0.1)
 cutoff = 10000
 kernelDiff = cutoff*np.ones((len(lowerNRange),len(upperNRange)))
 
-gamma=1.5
+gamma=1.001
 
 if gamma>1.0:
     diffType='super'
@@ -78,8 +78,8 @@ for i in range(0,len(lowerNRange)-1):
             a=lowerNRange[i]
             b=upperNRange[j]
             omega_min, omega_max = setFrequencyRange(a,b)
-            #omega = np.linspace(omega_min,omega_max,num=N)
-            omega =np.random.uniform(omega_min,omega_max,N) # np.linspace(omega_min,omega_max,num=N)
+            omega = np.linspace(omega_min,omega_max,num=N)
+            #omega =np.random.uniform(omega_min,omega_max,N) # np.linspace(omega_min,omega_max,num=N)
             masses = computeMasses(omega)
             k=np.multiply(masses,np.power(omega,2)) # compute spring constants
             K = computeKernel(timesteps,k,omega)

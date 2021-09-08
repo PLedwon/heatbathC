@@ -3,9 +3,15 @@
 #include <cmath>
 #include <iostream>
 #include <random>
+#include <limits>
+#include <utility>
 #include <fstream>
 #include <array>
+#include <tuple>
 using std::array;
+
+typedef unsigned long long int Ullong;
+typedef double Doub;
 
 class Heatbath {
 
@@ -98,21 +104,79 @@ void invertMasses(double (&invM)[n], double (&masses)[n]) {
 }
 
 
+std::pair<double, double> generateGaussianNoise(double mu, double sigma)
+{
+    constexpr double epsilon = std::numeric_limits<double>::epsilon();
+    constexpr double two_pi = 2.0 * M_PI;
+
+    //initialize the random uniform number generator (runif) in a range 0 to 1
+    static std::mt19937 rng(std::random_device{}()); // Standard mersenne_twister_engine seeded with rd()
+    static std::uniform_real_distribution<> runif(0.0, 1.0);
+
+    //create two random numbers, make sure u1 is greater than epsilon
+    double u1, u2;
+    do
+    {
+        u1 = runif(rng);
+        u2 = runif(rng);
+    }
+    while (u1 <= epsilon);
+
+    //compute z0 and z1
+    auto mag = sigma * sqrt(-2.0 * log(u1));
+    auto z0  = mag * cos(two_pi * u2) + mu;
+    auto z1  = mag * sin(two_pi * u2) + mu;
+
+    return std::make_pair(z0, z1);
+}
+
+/*
+// generate normally distributed random number with ratio of uniforms method, see "Numerical recipes in C"
+struct Normaldev : Ran {
+            //Structure for normal deviates.
+    Doub mu,sig;
+    Normaldev(Doub mmu, Doub ssig, Ullong i)
+            : Ran(i), mu(mmu), sig(ssig){}
+        Doub dev() {
+        // Return a normal deviate.
+                Doub u,v,x,y,q;
+        do {
+            u = Doub();
+            v = 1.7156*(Doub()-0.5);
+            x = u - 0.449871;
+            y = fabs(v) + 0.386595;
+            q = pow(x,0.5) + y*(0.19600*y-0.25472*x);
+        } while (q > 0.27597
+                 && (q > 0.27846 || pow(v,0.5) > -4.*log(u)*pow(u,0.5)));
+        return mu + sig*v/u;
+    }
+};
+*/
+
+
 void generateInitialConditions(Heatbath &bath, double M,  double masses[], const double BETA) {
+
 
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<> d{0,1};
 
+
     double pref=pow(BETA,-0.5);
 
     //set the initial conditions for the distinguished particle
+    std::pair<double, double> rndPair;
+    rndPair = generateGaussianNoise(0.0,1.0);
+
     bath.q[0] = 0; //
-    bath.p[0] = pref * pow(M,0.5) * d(gen);
+    bath.p[0] = pref * pow(M,0.5) * rndPair.second ;
+    //bath.p[0] = pref * pow(M,0.5) * d(gen);
 
     for (int i = 1; i < bath.size; ++i) {
-       bath.q[i] = bath.q[0] + pref*pow(bath.k[i],-0.5)*d(gen);
-       bath.p[i] = pref*pow(masses[i],0.5)* d(gen);
+
+       rndPair = generateGaussianNoise(0,1);
+       bath.q[i] = bath.q[0] + pref*pow(bath.k[i],-0.5) * rndPair.first;//d(gen);
+       bath.p[i] = pref*pow(masses[i],0.5) * rndPair.second; //d(gen);
     }
     //initialize heatbath with vanishing center of mass velocity
     double avgMomentum = avg(bath.p,bath.size);
@@ -217,6 +281,32 @@ void write_csv(std::string filename, std::string colname, Heatbath &bath){
     for(int i = 0; i < bath.nSave; ++i)
     {
         myFile << bath.trajectory[i] << "\n";
+    }
+
+    myFile.close();
+}
+
+void write_initialPositions(std::string filename, std::string colname, Heatbath &bath){
+    std::ofstream myFile(filename);
+    //myFile << colname << "\n";
+
+    // Send data to the stream
+    for(int i = 0; i < bath.size; ++i)
+    {
+        myFile << bath.q[i] << "\n";
+    }
+
+    myFile.close();
+}
+
+void write_initialMomenta(std::string filename, std::string colname, Heatbath &bath){
+    std::ofstream myFile(filename);
+    //myFile << colname << "\n";
+
+    // Send data to the stream
+    for(int i = 0; i < bath.size; ++i)
+    {
+        myFile << bath.p[i] << "\n";
     }
 
     myFile.close();
