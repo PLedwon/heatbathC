@@ -11,20 +11,20 @@ N=60000 #number of bath oscillators
 oscMass=1.0 #1.0 #mass of heaviest bath oscillator
 M=0.01# mass of the distinguished particle
 t0=0.0
-t1=2000
+t1=7000
 #dt=0.0002#01.0/float(N)#(t1-t0)/100.0
-dt=2.0
+dt=10.0
 Omega=1.0
 gridsize = 19 #should be (M*10)-1 for nice values
 timesteps=np.arange(0.0,t1,dt)
-lowerNRange = np.linspace(-1.0,-0.8,gridsize)
-upperNRange = np.linspace(0.9,1.2,gridsize)
+lowerNRange = np.linspace(-0.86,-0.82,gridsize)
+upperNRange = np.linspace(1.04,1.07,gridsize)
 #lowerNRange =np.arange(-1.1,-0.9,0.1)
 #upperNRange =np.arange(0.8,1.3,0.1)
 cutoff = 10000
 kernelDiff = cutoff*np.ones((len(lowerNRange),len(upperNRange)))
 
-gamma=1.001
+gamma=1.25
 
 if gamma>1.0:
     diffType='super'
