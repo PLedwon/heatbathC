@@ -13,19 +13,21 @@ Omega=1.0
 if not glob.glob('./*.npz'):
 
     resultList =glob.glob('../csvData/*.csv')
-    print(resultList)
     df = pd.read_csv(resultList[0])
     q = df.to_numpy()
-    varQ = np.zeros(len(q)-1)
-    squaredQ = np.zeros(len(q)-1)
-    aveQ = np.zeros(len(q)-1)
+    norm = np.power(len(resultList),-1.0)
+    stdMat = np.zeros((len(q),len(resultList)))
+    stdMat[:,0] = norm * q[:,0]
+    varQ = np.zeros(len(q))
+    squaredQ = np.zeros(len(q))
+    aveQ = np.zeros(len(q))
 
     for file in resultList:
         df = pd.read_csv(file)
         q = df.to_numpy()
-        print(len(q))
+        stdMat[:,resultList.index(file)] = norm* q[:,0]
         squaQ = np.power(q,2)
-        for i in range(len(squaredQ)):
+        for i in range(0,len(squaredQ)):
             squaredQ[i] +=q[i]**2
             aveQ[i] += q[i]
 
@@ -36,31 +38,42 @@ if not glob.glob('./*.npz'):
 #        trajectories[:,i]= df.to_numpy()
    
 
+stdErr = np.zeros(len(q))
+for i in range(len(q)):
+    stdErr[i] = np.var(stdMat[i,:])
+print(stdErr)
  
 
 
-norm = np.power(len(resultList),-1.0)
 for i in range(len(varQ)):
     varQ[i] = norm*squaredQ[i] - norm**2 * aveQ[i]
+varQ[0]=0
 
-stdMat = np.zeros(len(q)-1)
-#for file in resultList:
+#tempArr = np.zeros(len(resultList))
+#stdMat = np.zeros(len(q))
+#for i in range(0,len(q)-1):
+#    for file in resultList:
+#        df = pd.read_csv(file)
+#        q = df.to_numpy()
+#        print(resultList.index(file))
+#        tempArr[resultList.index(file)]=q[i]
+#        stdMat[i]=np.var(tempArr)
+        
+        
 
+t=np.arange(0,len(q))
+gamma=1.8
 
-t=np.arange(0,len(q)-1)
-gamma=1.5
-
-print("average position", norm*aveQ)
 
 def theoDiff(x,a,b):
-    return a*np.power(x,b)#+b
+    return a*np.power(x,gamma)+b
 
 #startIndex = int(math.floor,t1/dt*0.5)
-startIndex = int(np.floor(len(t)*0.7))
+startIndex = int(np.floor(len(t)*0.6))
 endIndex =int(len(t)-1)
 #endIndex = int(np.floor(len(t)*0.24))
 popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
-print(popt)
+#print(popt)
 
 
 
@@ -74,7 +87,8 @@ plt.ylabel('sample trajectory')
 trajectory.savefig("./plots/img/trajectory.pdf")
 
 vQ = plt.figure(2)
-plt.plot(t,varQ)
+plt.errorbar(t[0:100:-1],varQ[0:100:-1],stdErr[0:100:-1]*100)
+#plt.plot(t,varQ)
 plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xlabel('t')
 plt.ylabel('var(Q)')
@@ -82,7 +96,8 @@ vQ.savefig("./plots/img/varQ.pdf")
 plt.legend()
 
 vQlog = plt.figure(3)
-plt.plot(t,varQ)
+#plt.plot(t,varQ)
+plt.errorbar(t[0:100:-1],varQ[0:100:-1],stdErr[0:100:-1]*100)
 plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xscale('log', nonposx='clip')
 plt.yscale('log', nonposy='clip')
