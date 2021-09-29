@@ -62,7 +62,7 @@ varQ[0]=0
         
 
 t=np.arange(0,len(q))
-gamma=1.8
+gamma=1.25
 
 
 def theoDiff(x,a,b):
