@@ -63,16 +63,16 @@ varQ[0]=0
         
 
 t=np.arange(0,len(q))
-gamma=1.25
+gamma=1.9
 
 
 def theoDiff(x,a,b):
     return a*np.power(x,b)
 
 #startIndex = int(math.floor,t1/dt*0.5)
-startIndex = int(np.floor(len(t)*0.3))
+startIndex = int(np.floor(len(t)*0.4))
 endIndex =int(len(t)-1)
-#endIndex = int(np.floor(len(t)*0.24))
+#endIndex = int(np.floor(len(t)*0.43))
 popt, pcov = curve_fit(theoDiff,t[startIndex:endIndex], varQ[startIndex:endIndex])
 print(popt)
 
@@ -83,28 +83,46 @@ plt.xlabel('t')
 plt.ylabel('sample trajectory')
 trajectory.savefig("./plots/img/trajectory.pdf")
 
-sli=slice(0,-1,100)
+errBarValue=50
+skipValue =int(len(q)/errBarValue)
+
+sli=slice(0,-1,skipValue)
 tErr=t[sli]
 varQErr=varQ[sli]
 yerr=stdErr[sli]
 
+
+logPlotStartIndex=int(0.01*len(q))
+logsli=np.logspace(np.log10(logPlotStartIndex),np.log10(len(q)),errBarValue).astype(int)
+tErrLog=t[logsli]
+varQErrLog=varQ[logsli]
+yerrLog=stdErr[logsli]
+
+
 vQ = plt.figure(2)
-plt.errorbar(tErr,varQErr,yerr=yerr,fmt='none')
-plt.plot(t,varQ)
-#plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
+#plt.errorbar(tErr,varQErr,yerr=yerr, ecolor='#FC9169')
+plt.errorbar(tErr,varQErr,yerr=yerr,fmt='none', capsize=1.0, ecolor='#3B4CBF')
+plt.plot(t,varQ,',', label='numerical results', color='#3B4CBF')
+plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), color='#0066FF',linestyle='--',label=r'$\propto t^{\gamma}$')
 plt.xlabel('t')
 plt.ylabel('var(Q)')
-vQ.savefig("./plots/img/varQ.pdf")
 plt.legend()
+vQ.savefig("./plots/img/varQ.pdf")
 
 vQlog = plt.figure(3)
-plt.plot(t,varQ)
-plt.errorbar(tErr,varQErr,yerr=yerr,fmt='none')
-#plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), linestyle='--',label=r'$\propto t^{\gamma}$')
-plt.xscale('log', nonposx='clip')
-plt.yscale('log', nonposy='clip')
+plt.plot(t[logPlotStartIndex:-1],varQ[logPlotStartIndex:-1],',', label='numerical results', color='#3B4CBF')
+#plt.errorbar(tErr,varQErr,yerr=yerr, ecolor='#FC9169')
+plt.errorbar(tErrLog,varQErrLog,yerr=yerrLog,fmt='none', capsize=1.0, ecolor='#3B4CBF')
+plt.plot(t[startIndex:endIndex],theoDiff(t[startIndex:endIndex],popt[0],popt[1]), linestyle='--',label=r'$\propto t^{\gamma}$')
+#plt.xscale('log', nonposx='clip')
+#plt.yscale('log', nonposy='clip')
+plt.xscale('log' )
+plt.yscale('log')
+
+
 plt.xlabel('t')
 plt.ylabel('var(Q)')
+plt.legend()
 vQlog.savefig("./plots/img/varQlog.pdf")
 
 

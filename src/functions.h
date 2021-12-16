@@ -35,6 +35,7 @@ void printArray_(double a[], int size) {
     for (i = 0; i < size; i++) {
         //std::cout << a[i] << ' ';
         printf("%e ", a[i]);
+	std::cout << '\n';
     }
     std::cout << '\n';
 }
